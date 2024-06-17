@@ -14,11 +14,12 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement()) @map("id")
-  email     String  @unique @map("email")
-  password  String  @map("password")
-  name      String  @map("name")
-  introduce String? @map("introduce") @db.Text
+  id           Int     @id @default(autoincrement()) @map("id")
+  email        String  @unique @map("email")
+  password     String  @map("password")
+  name         String  @map("name")
+  introduce    String? @map("introduce") @db.Text
+  profileImage String? @map("profile_image")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -32,12 +33,13 @@ model User {
 }
 
 model Petsitter {
-  id         Int    @id @default(autoincrement()) @map("id")
-  name       String @map("name")
-  experience Int    @map("experience")
-  email      String @unique @map("email")
-  password   String @map("password")
-  introduce  String @default("안녕하세요.") @map("introduce")
+  id           Int     @id @default(autoincrement()) @map("id")
+  name         String  @map("name")
+  experience   Int     @map("experience")
+  email        String  @unique @map("email")
+  password     String  @map("password")
+  profileImage String? @map("profile_image")
+  introduce    String  @default("안녕하세요.") @map("introduce")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
