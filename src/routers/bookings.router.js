@@ -10,11 +10,11 @@ const bookingsRepository = new BookingsRepository(prisma);
 const bookingsService = new BookingsService(bookingsRepository);
 const bookingsController = new BookingsController(bookingsService);
 
+//예약 생성
+bookingRouter.post('/', bookingsController.createBooking);
+
 //예약 목록 조회
 bookingRouter.get('/', bookingsController.findAllBookings);
-
-//예약
-bookingRouter.post('/', bookingsController.createBooking);
 
 //예약 상세 조회
 bookingRouter.get('/:bookingId', bookingsController.findBooking);
