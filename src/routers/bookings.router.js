@@ -11,18 +11,18 @@ const bookingsService = new BookingsService(bookingsRepository);
 const bookingsController = new BookingsController(bookingsService);
 
 //예약 목록 조회
-app.get('/', bookingsController.findAllBookings);
+bookingRouter.get('/', bookingsController.findAllBookings);
 
 //예약
-app.post('/', bookingsController.createBooking);
+bookingRouter.post('/', bookingsController.createBooking);
 
 //예약 상세 조회
-app.get('/:bookingId', bookingsController.findBooking);
+bookingRouter.get('/:bookingId', bookingsController.findBooking);
 
 //예약 수정
-app.get('/:bookingId', bookingsController.updateBooking);
+bookingRouter.get('/:bookingId', bookingsController.updateBooking);
 
 //예약 취소
-app.delete('/:bookingId', bookingsController.deleteBooking);
+bookingRouter.delete('/:bookingId', bookingsController.deleteBooking);
 
 export { bookingRouter };
