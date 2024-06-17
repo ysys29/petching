@@ -16,10 +16,19 @@ export class BookingsRepository {
     return petsitter;
   };
 
-  //예약 하나 찾기
-  findBooking = async ({ petsitterId, date }) => {
+  //펫시터 아이디로 예약 찾기
+  findBookingByPetsitterId = async ({ petsitterId, date }) => {
     const findBooking = await this.prisma.booking.findFirst({
       where: { petsitterId, date },
+    });
+
+    return findBooking;
+  };
+
+  //부킹 아이디로 예약 찾기
+  findBookingByuBookingId = async ({ bookingId }) => {
+    const findBooking = await this.prisma.booking.findUnique({
+      where: { id: bookingId },
     });
 
     return findBooking;
@@ -68,5 +77,10 @@ export class BookingsRepository {
         totalPrice: booking.totalPrice,
       };
     });
+  };
+
+  //예약 삭제
+  deleteBooking = async ({ bookingId }) => {
+    await this.prisma.booking.delete({ where: { id: bookingId } });
   };
 }

@@ -5,8 +5,8 @@ export class BookingsService {
     this.bookingsRepository = bookingsRepository;
   }
 
-  // 예약 상세 조회
-  findBooking = async ({ petsitterId, date }) => {
+  //펫시터 아이디로 예약 찾기
+  findBookingByPetsitterId = async ({ petsitterId, date }) => {
     //해당 날짜에 펫시터의 예약이 차있는지 find하기
     const existingBooking = await this.bookingsRepository.findBooking({
       petsitterId,
@@ -14,6 +14,19 @@ export class BookingsService {
     });
 
     return existingBooking;
+  };
+
+  //부킹 아이디로 예약 찾기
+  findBookingByBookingId = async ({ bookingId, userId }) => {
+    const booking = await this.bookingsRepository.findBookingByuBookingId({
+      bookingId,
+    });
+
+    if (booking.userId !== userId) {
+      throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
+    }
+
+    return booking;
   };
 
   // 펫시터 찾기
@@ -93,7 +106,10 @@ export class BookingsService {
     });
 
     //해당 날짜에 예약이 차있는지 확인
-    const existingBooking = await this.findBooking({ petsitterId, date });
+    const existingBooking = await this.findBookingByPetsitterId({
+      petsitterId,
+      date,
+    });
 
     //예약 결과가 있다면 에러
     if (existingBooking) {
@@ -123,5 +139,14 @@ export class BookingsService {
     const bookings = await this.bookingsRepository.findAllBookings({ userId });
 
     return bookings;
+  };
+
+  // 예약 취소
+  deleteBooking = async ({ userId, bookingId }) => {
+    const booking = await this.findBookingByBookingId({ userId, bookingId });
+
+    await this.bookingsRepository.deleteBooking({ bookingId });
+
+    return booking.id;
   };
 }

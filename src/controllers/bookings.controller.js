@@ -69,6 +69,18 @@ export class BookingsController {
   // 예약 취소
   deleteBooking = async (req, res, next) => {
     try {
+      //   const userId = req.user.id;
+      const userId = 1;
+      const bookingId = Number(req.params.bookingId);
+
+      const id = await this.bookingsService.deleteBooking({
+        userId,
+        bookingId,
+      });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '예약을 취소했습니다.', date: id });
     } catch (error) {
       next(error);
     }
