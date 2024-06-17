@@ -8,18 +8,24 @@ async function main() {
     data: {
       name: '펫시터1',
       experience: 1,
+      email: 'petsitter1@example.com',
+      password: 'petsitter1Password',
     },
   });
   const petsitter2 = await prisma.petsitter.create({
     data: {
       name: '펫시터2',
       experience: 2,
+      email: 'petsitter2@example.com',
+      password: 'petsitter2Password',
     },
   });
   const petsitter3 = await prisma.petsitter.create({
     data: {
       name: '펫시터3',
       experience: 3,
+      email: 'petsitter3@example.com',
+      password: 'petsitter3Password',
     },
   });
 
