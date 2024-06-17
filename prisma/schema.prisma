@@ -134,6 +134,7 @@ model Review {
   comment     String @map("comment")
 
   createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   petsitter Petsitter @relation(fields: [petsitterId], references: [id], onDelete: Cascade)
