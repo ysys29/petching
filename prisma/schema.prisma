@@ -128,7 +128,7 @@ model Bookmark {
 
 model Review {
   id          Int    @id @default(autoincrement()) @map("id")
-  userId      Int    @map("user_d")
+  userId      Int    @map("user_id")
   petsitterId Int    @map("petsitter_id")
   rating      Int    @map("rating")
   comment     String @map("comment")
