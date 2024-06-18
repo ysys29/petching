@@ -14,6 +14,11 @@ export default async function (req, res, next) {
     role: 'petsitter',
   };
 
-  req.user = user1;
+  const petsitter2 = {
+    id: 10,
+    role: 'petsitter',
+  };
+
+  req.user = petsitter2;
   next();
 }

@@ -3,6 +3,7 @@ import { prisma } from '../utils/prisma.utils.js';
 import { BookingsController } from '../controllers/bookings.controller.js';
 import { BookingsService } from '../services/bookings.service.js';
 import { BookingsRepository } from '../repositories/bookings.repository.js';
+import { requireRoles } from '../middlewares/require-roles.middleware.js';
 
 import tempMiddleware from '../middlewares/temp.middleware.js';
 
@@ -13,7 +14,12 @@ const bookingsService = new BookingsService(bookingsRepository);
 const bookingsController = new BookingsController(bookingsService);
 
 //예약 생성
-bookingRouter.post('/', tempMiddleware, bookingsController.createBooking);
+bookingRouter.post(
+  '/',
+  tempMiddleware,
+  requireRoles(['user']),
+  bookingsController.createBooking
+);
 
 //예약 목록 조회
 bookingRouter.get('/', tempMiddleware, bookingsController.findAllBookings);
@@ -29,6 +35,7 @@ bookingRouter.get(
 bookingRouter.patch(
   '/:bookingId',
   tempMiddleware,
+  requireRoles(['user']),
   bookingsController.updateBooking
 );
 
@@ -36,6 +43,7 @@ bookingRouter.patch(
 bookingRouter.patch(
   '/:bookingId',
   tempMiddleware,
+  requireRoles(['user']),
   bookingsController.cancelBooking
 );
 
@@ -43,6 +51,7 @@ bookingRouter.patch(
 bookingRouter.patch(
   '/:bookingId/status',
   tempMiddleware,
+  requireRoles(['petsitter']),
   bookingsController.statusUpdate
 );
 

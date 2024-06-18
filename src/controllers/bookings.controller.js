@@ -51,8 +51,6 @@ export class BookingsController {
       }
 
       const bookings = await this.bookingsService.findAllBookings({
-        // userId,
-        // petsitterId,
         whereType,
         sort,
       });
@@ -130,22 +128,6 @@ export class BookingsController {
       res
         .status(HTTP_STATUS.OK)
         .json({ message: '예약을 취소했습니다.', data: id });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // 펫시터가 자신이 받은 예약 목록 확인
-  petsitterBookings = async (req, res, next) => {
-    try {
-      const petsitterId = req.user.id;
-      const bookings = await this.bookingsService.findAllBookings({
-        petsitterId,
-      });
-
-      res
-        .status(HTTP_STATUS.OK)
-        .json({ message: '요청된 예약 목록', bookings });
     } catch (error) {
       next(error);
     }

@@ -37,6 +37,7 @@ export class BookingsRepository {
       findBooking = {
         id: findBooking.id,
         userId: findBooking.userId,
+        petsitterId: findBooking.petsitterId,
         petsitterName: findBooking.petsitter.name,
         date: findBooking.date.toISOString().split('T')[0],
         animalType: findBooking.animalType,
@@ -124,11 +125,6 @@ export class BookingsRepository {
 
     return updatedBooking;
   };
-
-  // //예약 삭제
-  // deleteBooking = async ({ bookingId }) => {
-  //   await this.prisma.booking.delete({ where: { id: bookingId } });
-  // };
 
   //예약 상태 수정
   bookingStatusUpdate = async ({ bookingId, status }) => {

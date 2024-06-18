@@ -14,8 +14,6 @@ export class BookingsService {
         date,
       });
 
-    console.log(existingBooking);
-
     return existingBooking;
   };
 
@@ -109,7 +107,6 @@ export class BookingsService {
     //총 금액 계산
     const totalPrice = await this.calculateTotalPrice({ price, surcharge });
 
-    console.log(date);
     //없으면 예약
     const data = await this.bookingsRepository.createBooking({
       userId,
@@ -128,8 +125,6 @@ export class BookingsService {
   // 예약 목록 조회
   findAllBookings = async ({ whereType, sort }) => {
     const bookings = await this.bookingsRepository.findAllBookings({
-      // userId,
-      // petsitterId,
       whereType,
       sort,
     });
@@ -141,7 +136,7 @@ export class BookingsService {
   findBookingByBookingId = async ({
     bookingId,
     userId,
-    // whereType,
+    whereType,
     includePetsitter,
     petsitterId,
   }) => {
@@ -154,7 +149,12 @@ export class BookingsService {
       throw new HttpError.NotFound('예약이 존재하지 않습니다.');
     }
 
-    if (booking.userId !== userId && booking.petsitterId !== petsitterId) {
+    if (
+      booking.userId !== whereType?.userId &&
+      booking.petsitterId !== whereType?.petsitterId &&
+      booking.userId !== userId &&
+      booking.petsitterId !== petsitterId
+    ) {
       throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
     }
 
@@ -214,12 +214,12 @@ export class BookingsService {
   };
 
   //상태 변경
-  bookingStatusUpdate = async ({ userId, bookingId, petsitterId, status }) => {
+  bookingStatusUpdate = async ({ bookingId, petsitterId, status }) => {
     const booking = await this.findBookingByBookingId({
-      userId,
       petsitterId,
       bookingId,
     });
+    console.log('2222222', booking);
 
     const updatedBooking = await this.bookingsRepository.bookingStatusUpdate({
       bookingId,
