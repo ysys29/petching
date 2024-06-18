@@ -42,7 +42,7 @@ export class AuthController {
       const { accessToken, refreshToken } =
         await this.authService.createAccessAndRefreshToken({
           id: petsitter.id,
-          role: petsitter,
+          role: 'petsitter',
         });
 
       res
