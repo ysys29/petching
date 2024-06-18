@@ -18,9 +18,6 @@ export class UsersRepository {
         introduce,
         profileImage,
       },
-      omit: {
-        password: true,
-      },
     });
 
     return data;
