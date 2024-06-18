@@ -53,4 +53,21 @@ export class PetsitterController {
       next(err);
     }
   };
+
+  //펫시터 지역별 필터링
+  petsitterLocation = async (req, res, next) => {
+    try {
+      const { location } = req.query;
+
+      let data = await this.petsitterService.findByLocation(location);
+
+      return res.status(HTTP_STATUS.OK).json({
+        status: HTTP_STATUS.OK,
+        message: '지역별 검색에 성공하였습니다',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
 }

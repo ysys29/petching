@@ -24,4 +24,21 @@ export class PetsitterRepository {
     });
     return data;
   };
+
+  // 펫시터 지역별 정렬
+  findByLocation = async (location) => {
+    const data = await prisma.petsitter.findMany({
+      where: {
+        petsitterLocation: {
+          some: {
+            location: {
+              contains: location,
+            },
+          },
+        },
+      },
+      include: { petsitterLocation: true },
+    });
+    return data;
+  };
 }

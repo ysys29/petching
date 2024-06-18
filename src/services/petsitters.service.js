@@ -58,4 +58,26 @@ export class PetsitterService {
       };
     });
   };
+  //펫시터 지역별 필터링
+  findByLocation = async (location) => {
+    const sitters = await this.petsitterRepository.findByLocation(location);
+
+    sitters.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+    return sitters.map((sitter) => {
+      return {
+        id: sitter.id,
+        name: sitter.name,
+        experience: sitter.experience,
+        introduce: sitter.introduce,
+        localtion: sitter.petsitterLocation
+          .map((loc) => loc.location)
+          .join(', '),
+        profileImage: sitter.profileImage,
+        createdAt: sitter.createdAt,
+      };
+    });
+  };
 }
