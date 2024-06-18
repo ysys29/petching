@@ -67,9 +67,10 @@ export class BookingsController {
       const userId = 1;
       const bookingId = Number(req.params.bookingId);
 
-      const booking = await this.bookingsService.findBooking({
+      const booking = await this.bookingsService.findBookingByBookingId({
         userId,
         bookingId,
+        includePetsitter: true,
       });
 
       res

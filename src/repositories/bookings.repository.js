@@ -26,7 +26,7 @@ export class BookingsRepository {
   };
 
   //부킹 아이디로 예약 찾기
-  findBookingByBookingId = async ({ bookingId, includePetsitter = false }) => {
+  findBookingByBookingId = async ({ bookingId, includePetsitter }) => {
     let findBooking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
       include: { petsitter: includePetsitter },

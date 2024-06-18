@@ -163,17 +163,6 @@ export class BookingsService {
     return booking;
   };
 
-  //예약 상세 조회
-  findBooking = async ({ bookingId, userId }) => {
-    const booking = await this.findBookingByBookingId({
-      bookingId,
-      userId,
-      includePetsitter: true,
-    });
-
-    return booking;
-  };
-
   //예약 수정
   updateBooking = async ({
     bookingId,
@@ -190,21 +179,17 @@ export class BookingsService {
       petsitterId: booking.petsitterId,
     });
 
-    if (!serviceType) {
-      serviceType = booking.serviceType;
-    }
-
-    if (!animalType) {
-      animalType = booking.animalType;
-    }
-
-    if (!location) {
-      location = booking.location;
-    }
+    const { price, surcharge } = await this.validateService({
+      petsitter,
+      animalType: animalType ?? booking.animalType,
+      serviceType: serviceType ?? booking.serviceType,
+      location: location ?? booking.location,
+    });
 
     let parseDate = date ? this.parseDate({ date }) : booking.date;
 
     if (parseDate.toString() !== booking.date.toString()) {
+      //해당하는 날짜에 예약이 있는지 확인
       const existingBooking = await this.findBookingByPetsitterId({
         petsitterId: booking.petsitterId,
         date: parseDate,
@@ -216,13 +201,6 @@ export class BookingsService {
         );
       }
     }
-
-    const { price, surcharge } = await this.validateService({
-      petsitter,
-      animalType,
-      serviceType,
-      location,
-    });
 
     const totalPrice = await this.calculateTotalPrice({ price, surcharge });
 
