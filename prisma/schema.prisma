@@ -99,10 +99,12 @@ model Booking {
   id          Int         @id @default(autoincrement()) @map("id")
   userId      Int         @map("user_id")
   petsitterId Int         @map("petsitter_id")
-  anmalType   AnimalType  @map("animal_type")
-  service     ServiceType @map("service")
-  content     String      @map("content") @db.Text //요구사항
+  animalType  AnimalType  @map("animal_type")
+  serviceType ServiceType @map("service")
+  location    String      @map("location")
+  content     String?     @map("content") @db.Text //요구사항
   date        DateTime    @map("date")
+  totalPrice  Int         @map("total_price")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

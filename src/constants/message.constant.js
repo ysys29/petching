@@ -1,3 +1,5 @@
+import { MIN_PASSWORD_LENGTH, MAX_PASSWORD_LENGTH } from './auth.constant.js';
+
 export const MESSAGES = {
   AUTH: {
     COMMON: {
@@ -8,7 +10,8 @@ export const MESSAGES = {
       },
       PASSWORD: {
         REQUIRED: '비밀번호를 입력해 주세요.',
-        LENGTH: '비밀번호를 6자리 이상, 12자리 이하로 설정해주세요.',
+        LENGTH: `비밀번호를 ${MIN_PASSWORD_LENGTH}자리 이상, ${MAX_PASSWORD_LENGTH}자리 이하로 설정해주세요.`,
+        NO_GAP: '비밀번호에는 공백이 포함될 수 없습니다.',
         NO_STRING: '비밀번호는 문자열로 입력해야합니다.',
       },
       REPEAT_PASSWORD: {
