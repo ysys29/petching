@@ -70,16 +70,6 @@ export class BookingsService {
     return totalPrice;
   };
 
-  //날짜 파싱
-  parseDate = ({ date }) => {
-    const parts = date.split('-');
-    const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}T00:00:00.000Z`;
-
-    const parseDate = new Date(formattedDate);
-
-    return parseDate;
-  };
-
   //예약 생성
   createBooking = async ({
     userId,
@@ -103,13 +93,10 @@ export class BookingsService {
       location,
     });
 
-    //날짜 타입 변환 string => datetime
-    const parseDate = this.parseDate({ date });
-
     //해당 날짜에 예약이 차있는지 확인
     const existingBooking = await this.findBookingByPetsitterId({
       petsitterId,
-      date: parseDate,
+      date,
     });
 
     //예약 결과가 있다면 에러
@@ -124,7 +111,7 @@ export class BookingsService {
     const data = await this.bookingsRepository.createBooking({
       userId,
       petsitterId,
-      date: parseDate,
+      date,
       animalType,
       serviceType,
       location,
@@ -136,9 +123,9 @@ export class BookingsService {
   };
 
   // 예약 목록 조회
-  findAllBookings = async ({ userId, sort }) => {
+  findAllBookings = async ({ whereType, sort }) => {
     const bookings = await this.bookingsRepository.findAllBookings({
-      userId,
+      whereType,
       sort,
     });
 
@@ -146,7 +133,13 @@ export class BookingsService {
   };
 
   //예약 상세 조회 --- 예약 한개 찾기로 해서
-  findBookingByBookingId = async ({ bookingId, userId, includePetsitter }) => {
+  findBookingByBookingId = async ({
+    bookingId,
+    userId,
+    whereType,
+    includePetsitter,
+    petsitterId,
+  }) => {
     const booking = await this.bookingsRepository.findBookingByBookingId({
       bookingId,
       includePetsitter,
@@ -156,7 +149,12 @@ export class BookingsService {
       throw new HttpError.NotFound('예약이 존재하지 않습니다.');
     }
 
-    if (booking.userId !== userId) {
+    if (
+      booking.userId !== whereType?.userId &&
+      booking.petsitterId !== whereType?.petsitterId &&
+      booking.userId !== userId &&
+      booking.petsitterId !== petsitterId
+    ) {
       throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
     }
 
@@ -186,13 +184,11 @@ export class BookingsService {
       location: location ?? booking.location,
     });
 
-    let parseDate = date ? this.parseDate({ date }) : booking.date;
-
-    if (parseDate.toString() !== booking.date.toString()) {
+    if (date !== booking.date) {
       //해당하는 날짜에 예약이 있는지 확인
       const existingBooking = await this.findBookingByPetsitterId({
         petsitterId: booking.petsitterId,
-        date: parseDate,
+        date,
       });
 
       if (existingBooking) {
@@ -206,7 +202,7 @@ export class BookingsService {
 
     const updatedBooking = await this.bookingsRepository.updateBooking({
       bookingId,
-      date: parseDate,
+      date,
       serviceType,
       animalType,
       location,
@@ -217,12 +213,19 @@ export class BookingsService {
     return updatedBooking;
   };
 
-  // 예약 취소
-  deleteBooking = async ({ userId, bookingId }) => {
-    const booking = await this.findBookingByBookingId({ userId, bookingId });
+  //상태 변경
+  bookingStatusUpdate = async ({ bookingId, petsitterId, status }) => {
+    const booking = await this.findBookingByBookingId({
+      petsitterId,
+      bookingId,
+    });
+    console.log('2222222', booking);
 
-    await this.bookingsRepository.deleteBooking({ bookingId });
+    const updatedBooking = await this.bookingsRepository.bookingStatusUpdate({
+      bookingId,
+      status,
+    });
 
-    return booking.id;
+    return updatedBooking.id;
   };
 }
