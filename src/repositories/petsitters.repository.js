@@ -6,4 +6,11 @@ export class PetsitterRepository {
     const data = await prisma.petsitter.findMany();
     return data;
   };
+
+  readSitter = async (id) => {
+    const data = await prisma.petsitter.findUnique({
+      where: { id: +id },
+    });
+    return data;
+  };
 }

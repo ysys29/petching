@@ -8,6 +8,6 @@ const petsitterController = new PetsitterController();
 petsitterRouter.get('/', petsitterController.getList);
 
 // 펫시터 상세 조회
-petsitterRouter.get('/:petsitterId');
+petsitterRouter.get('/:id', petsitterController.sitterDetail);
 
 export { petsitterRouter };

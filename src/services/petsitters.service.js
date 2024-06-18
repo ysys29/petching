@@ -22,4 +22,19 @@ export class PetsitterService {
       };
     });
   };
+
+  readSitter = async (id) => {
+    const sitter = await this.petsitterRepository.readSitter(id);
+
+    return {
+      id: sitter.id,
+      name: sitter.name,
+      experience: sitter.experience,
+      email: sitter.email,
+      profileImage: sitter.profileImage,
+      introduce: sitter.introduce,
+      createdAt: sitter.createdAt,
+      updatedAt: sitter.updatedAt,
+    };
+  };
 }
