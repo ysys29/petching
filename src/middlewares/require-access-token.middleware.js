@@ -33,7 +33,7 @@ export const requireAccessToken = async (req, res, next) => {
       }
     }
 
-    // user repositories 수정 필요
+    // user repository 수정 필요
     const { id } = payload;
     const user = await prisma.user.findUnique({
       where: { id },
