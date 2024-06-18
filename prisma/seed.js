@@ -9,7 +9,7 @@ async function main() {
       name: '펫시터1',
       experience: 1,
       email: 'petsitter1@example.com',
-      password: 'petsitter1Password',
+      password: '$2b$10$1LOh6xAWYSZRIl0AjuDLA.HR3//CVLE9ahxqPp1/Gz3PuCyYLQN0S', //123 해싱된 값
     },
   });
   const petsitter2 = await prisma.petsitter.create({
@@ -17,7 +17,7 @@ async function main() {
       name: '펫시터2',
       experience: 2,
       email: 'petsitter2@example.com',
-      password: 'petsitter2Password',
+      password: '$2b$10$1LOh6xAWYSZRIl0AjuDLA.HR3//CVLE9ahxqPp1/Gz3PuCyYLQN0S',
     },
   });
   const petsitter3 = await prisma.petsitter.create({
@@ -25,7 +25,7 @@ async function main() {
       name: '펫시터3',
       experience: 3,
       email: 'petsitter3@example.com',
-      password: 'petsitter3Password',
+      password: '$2b$10$1LOh6xAWYSZRIl0AjuDLA.HR3//CVLE9ahxqPp1/Gz3PuCyYLQN0S',
     },
   });
 
