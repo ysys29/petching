@@ -31,7 +31,7 @@ export const signupValidator = async (req, res, next) => {
       introduce: Joi.string().messages({
         'string.base': MESSAGES.AUTH.COMMON.INTRODUCE.NO_STRING,
       }),
-      profile_image: Joi.number().precision(1).messages({
+      profile_image: Joi.Joi.string().uri().messages({
         'string.base': MESSAGES.AUTH.COMMON.PROFILE_IMAGE,
       }),
     });

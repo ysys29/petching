@@ -1,9 +1,11 @@
 import { REFRESH_TOKEN_SECRET } from '../constants/env.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import jwt from 'jsonwebtoken';
-import { prisma } from '../utils/prisma.util.js'; // 수정 필요
 import { HttpError } from '../errors/http.error.js';
+import { UsersRepository } from '../repositories/users.repository.js';
 import bcrypt from 'bcrypt';
+
+const usersRepository = new UsersRepository();
 
 export const requireRefreshToken = async (req, res, next) => {
   try {
@@ -34,10 +36,7 @@ export const requireRefreshToken = async (req, res, next) => {
       }
     }
     const { id } = payload;
-    const existedRefreshToken = await prisma.refreshToken.findUnique({
-      // user repository 수정 필요
-      where: { userId: id },
-    });
+    const existedRefreshToken = await usersRepository.findOneRefreshTokenId(id);
 
     if (!existedRefreshToken) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);
@@ -52,10 +51,7 @@ export const requireRefreshToken = async (req, res, next) => {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);
     }
 
-    const user = await prisma.user.findUnique({ // user repository 수정 필요
-      where: { id },
-      omit: { password: true },
-    });
+    const user = await usersRepository.findOneId(id);
 
     if (!user) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);

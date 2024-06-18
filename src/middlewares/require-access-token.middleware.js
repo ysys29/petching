@@ -2,7 +2,9 @@ import { ACCESS_TOKEN_SECRET } from '../constants/env.constant.js';
 import { MESSAGES } from '../constants/message.constant.js';
 import jwt from 'jsonwebtoken';
 import { HttpError } from '../errors/http.error.js';
-import { prisma } from '../utils/prisma.util.js'; // 수정 필요
+import { UsersRepository } from '../repositories/users.repository.js';
+
+const usersRepository = new UsersRepository();
 
 export const requireAccessToken = async (req, res, next) => {
   try {
@@ -33,12 +35,8 @@ export const requireAccessToken = async (req, res, next) => {
       }
     }
 
-    // user repository 수정 필요
     const { id } = payload;
-    const user = await prisma.user.findUnique({
-      where: { id },
-      omit: { password: true },
-    });
+    const user = await usersRepository.findOneId(id);
 
     if (!user) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);
