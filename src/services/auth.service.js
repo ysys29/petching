@@ -10,21 +10,20 @@ export class AuthService {
 
   // 회원가입
   signUp = async ({ email, password, name, introduce, profileImage }) => {
-
     const findOneEmail = await this.usersRepository.findOneEmail(email);
-    
+
     if (findOneEmail) {
       throw new HttpError.Conflict(MESSAGES.AUTH.COMMON.EMAIL.DUPLICATED);
     }
     const hashedPassword = bcrypt.hashSync(password, HASH_SALT_ROUNDS);
-	const data = await this.usersRepository.createUsers({
-		email,
-		hashedPassword,
-		name,
-		introduce,
-		profileImage
-	});
+    const { password: _pw, ...data } = await this.usersRepository.createUsers({
+      email,
+      hashedPassword,
+      name,
+      introduce,
+      profileImage,
+    });
 
-	return data;
+    return data;
   };
 }
