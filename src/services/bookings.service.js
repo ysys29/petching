@@ -217,12 +217,19 @@ export class BookingsService {
     return updatedBooking;
   };
 
-  // 예약 취소
-  deleteBooking = async ({ userId, bookingId }) => {
-    const booking = await this.findBookingByBookingId({ userId, bookingId });
+  //상태 변경
+  bookingStatusUpdate = async ({ userId, bookingId, status }) => {
+    console.log(status);
+    const booking = await this.findBookingByBookingId({
+      userId,
+      bookingId,
+    });
 
-    await this.bookingsRepository.deleteBooking({ bookingId });
+    const updatedBooking = await this.bookingsRepository.bookingStatusUpdate({
+      bookingId,
+      status,
+    });
 
-    return booking.id;
+    return updatedBooking.id;
   };
 }

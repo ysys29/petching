@@ -110,15 +110,16 @@ export class BookingsController {
   };
 
   // 예약 취소
-  deleteBooking = async (req, res, next) => {
+  cancelBooking = async (req, res, next) => {
     try {
       //   const userId = req.user.id;
       const userId = 1;
       const bookingId = Number(req.params.bookingId);
 
-      const id = await this.bookingsService.deleteBooking({
+      const id = await this.bookingsService.bookingStatusUpdate({
         userId,
         bookingId,
+        status: 'CANCELED',
       });
 
       res

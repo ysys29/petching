@@ -23,6 +23,6 @@ bookingRouter.get('/:bookingId', bookingsController.findBooking);
 bookingRouter.patch('/:bookingId', bookingsController.updateBooking);
 
 //예약 취소
-bookingRouter.delete('/:bookingId', bookingsController.deleteBooking);
+bookingRouter.delete('/:bookingId', bookingsController.cancelBooking);
 
 export { bookingRouter };

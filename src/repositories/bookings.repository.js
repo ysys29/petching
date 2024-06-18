@@ -122,8 +122,18 @@ export class BookingsRepository {
     return updatedBooking;
   };
 
-  //예약 삭제
-  deleteBooking = async ({ bookingId }) => {
-    await this.prisma.booking.delete({ where: { id: bookingId } });
+  // //예약 삭제
+  // deleteBooking = async ({ bookingId }) => {
+  //   await this.prisma.booking.delete({ where: { id: bookingId } });
+  // };
+
+  //예약 상태 수정
+  bookingStatusUpdate = async ({ bookingId, status }) => {
+    const statusUpdatedData = await this.prisma.booking.update({
+      where: { id: bookingId },
+      data: { status },
+    });
+
+    return statusUpdatedData;
   };
 }
