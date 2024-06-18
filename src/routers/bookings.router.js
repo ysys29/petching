@@ -20,7 +20,7 @@ bookingRouter.get('/', bookingsController.findAllBookings);
 bookingRouter.get('/:bookingId', bookingsController.findBooking);
 
 //예약 수정
-bookingRouter.get('/:bookingId', bookingsController.updateBooking);
+bookingRouter.patch('/:bookingId', bookingsController.updateBooking);
 
 //예약 취소
 bookingRouter.delete('/:bookingId', bookingsController.deleteBooking);

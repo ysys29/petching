@@ -157,6 +157,57 @@ export class BookingsService {
     return booking;
   };
 
+  //예약 수정
+  updateBooking = async ({
+    bookingId,
+    userId,
+    date,
+    serviceType,
+    animalType,
+    location,
+    content,
+  }) => {
+    const booking = await this.findBookingByBookingId({ bookingId, userId });
+
+    const petsitter = await this.findPetsitterById({
+      petsitterId: booking.petsitterId,
+    });
+
+    if (!serviceType) {
+      serviceType = booking.serviceType;
+    }
+
+    if (!animalType) {
+      animalType = booking.animalType;
+    }
+
+    if (!location) {
+      location = booking.location;
+    }
+
+    const { price, surcharge } = await this.validateService({
+      petsitter,
+      animalType,
+      serviceType,
+      location,
+    });
+
+    const totalPrice = await this.calculateTotalPrice({ price, surcharge });
+
+    console.log('sfdsf', bookingId);
+    const updatedBooking = await this.bookingsRepository.updateBooking({
+      bookingId,
+      date,
+      serviceType,
+      animalType,
+      location,
+      content,
+      totalPrice,
+    });
+
+    return updatedBooking;
+  };
+
   // 예약 취소
   deleteBooking = async ({ userId, bookingId }) => {
     const booking = await this.findBookingByBookingId({ userId, bookingId });

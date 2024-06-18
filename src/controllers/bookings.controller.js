@@ -74,6 +74,25 @@ export class BookingsController {
   // 예약 수정
   updateBooking = async (req, res, next) => {
     try {
+      // const userId = req.user.id
+      const userId = 1;
+      const bookingId = Number(req.params.bookingId);
+      const { date, serviceType, animalType, location, content } = req.body;
+
+      const updatedBooking = await this.bookingsService.updateBooking({
+        bookingId,
+        userId,
+        date,
+        serviceType,
+        animalType,
+        location,
+        content,
+      });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '예약을 수정했습니다.', updatedBooking });
+      return;
     } catch (error) {
       next(error);
     }

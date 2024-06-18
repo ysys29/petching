@@ -96,6 +96,31 @@ export class BookingsRepository {
     });
   };
 
+  //예약 수정
+  updateBooking = async ({
+    bookingId,
+    date,
+    serviceType,
+    animalType,
+    location,
+    content,
+    totalPrice,
+  }) => {
+    const updatedBooking = await this.prisma.booking.update({
+      where: { id: bookingId },
+      data: {
+        date,
+        serviceType,
+        animalType,
+        location,
+        content,
+        totalPrice,
+      },
+    });
+
+    return updatedBooking;
+  };
+
   //예약 삭제
   deleteBooking = async ({ bookingId }) => {
     await this.prisma.booking.delete({ where: { id: bookingId } });
