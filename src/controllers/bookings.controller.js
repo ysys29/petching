@@ -8,9 +8,8 @@ export class BookingsController {
   // 예약 생성
   createBooking = async (req, res, next) => {
     try {
-      //req.user에서 유저 아이디 받아오기
-      //const userId = req.user.id
-      const userId = 1;
+      const userId = req.user.id;
+
       //req.body에서 펫시터 아이디와 예약 날짜, 동물 종, 서비스 타입, 요구사항 받아오기
       const { petsitterId, date, animalType, serviceType, location, content } =
         req.body;
@@ -19,7 +18,7 @@ export class BookingsController {
       const data = await this.bookingsService.createBooking({
         userId,
         petsitterId,
-        date,
+        date: new Date(date),
         animalType,
         serviceType,
         location,
@@ -38,17 +37,8 @@ export class BookingsController {
   // 예약 목록 조회
   findAllBookings = async (req, res, next) => {
     try {
-      // const userId = req.user.id
-      // const { role } = req.user;
-      // const role = 'petsitter';
-      // if (role === 'user') {
-      //   const userId = req.user.id;
-      // } else {
-      //   // const petsitterId = req.user.id;
-      //   const petsitterId = 9;
-      // }
-      const role = 'petsitter';
-      const userId = 9;
+      const userId = req.user.id;
+      const { role } = req.user;
 
       const whereType = role === 'user' ? { userId } : { petsitterId: userId };
 
@@ -77,12 +67,15 @@ export class BookingsController {
   // 예약 상세 조회
   findBooking = async (req, res, next) => {
     try {
-      // const userId = req.user.id;
-      const userId = 1;
+      const userId = req.user.id;
+      const { role } = req.user;
       const bookingId = Number(req.params.bookingId);
 
+      const whereType = role === 'user' ? { userId } : { petsitterId: userId };
+
       const booking = await this.bookingsService.findBookingByBookingId({
-        userId,
+        // userId,
+        whereType,
         bookingId,
         includePetsitter: true,
       });
@@ -99,15 +92,14 @@ export class BookingsController {
   // 예약 수정
   updateBooking = async (req, res, next) => {
     try {
-      // const userId = req.user.id
-      const userId = 1;
+      const userId = req.user.id;
       const bookingId = Number(req.params.bookingId);
       const { date, serviceType, animalType, location, content } = req.body;
 
       const updatedBooking = await this.bookingsService.updateBooking({
         bookingId,
         userId,
-        date,
+        date: new Date(date),
         serviceType,
         animalType,
         location,
@@ -126,8 +118,7 @@ export class BookingsController {
   // 예약 취소 --유저가 취소
   cancelBooking = async (req, res, next) => {
     try {
-      //   const userId = req.user.id;
-      const userId = 1;
+      const userId = req.user.id;
       const bookingId = Number(req.params.bookingId);
 
       const id = await this.bookingsService.bookingStatusUpdate({
@@ -147,8 +138,7 @@ export class BookingsController {
   // 펫시터가 자신이 받은 예약 목록 확인
   petsitterBookings = async (req, res, next) => {
     try {
-      // cosnt petsitterId = req.petsitterid
-      const petsitterId = 9;
+      const petsitterId = req.user.id;
       const bookings = await this.bookingsService.findAllBookings({
         petsitterId,
       });
@@ -164,8 +154,7 @@ export class BookingsController {
   // 예약 상태 변경 --펫시터만 들어올 수 있게 라우터의 미들웨어에서 처리
   statusUpdate = async (req, res, next) => {
     try {
-      // const petsitterId = req.user.id
-      const petsitterId = 9;
+      const petsitterId = req.user.id;
       const bookingId = Number(req.params.bookingId);
       const { status } = req.body;
 

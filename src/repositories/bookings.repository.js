@@ -67,7 +67,7 @@ export class BookingsRepository {
       data: {
         userId,
         petsitterId,
-        date,
+        date: new Date(date),
         animalType,
         serviceType,
         location,

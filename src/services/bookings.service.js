@@ -72,16 +72,6 @@ export class BookingsService {
     return totalPrice;
   };
 
-  //날짜 파싱
-  parseDate = ({ date }) => {
-    const parts = date.split('-');
-    const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}T00:00:00.000Z`;
-
-    const parseDate = new Date(formattedDate);
-
-    return parseDate;
-  };
-
   //예약 생성
   createBooking = async ({
     userId,
@@ -105,13 +95,10 @@ export class BookingsService {
       location,
     });
 
-    //날짜 타입 변환 string => datetime
-    const parseDate = this.parseDate({ date });
-
     //해당 날짜에 예약이 차있는지 확인
     const existingBooking = await this.findBookingByPetsitterId({
       petsitterId,
-      date: parseDate,
+      date,
     });
 
     //예약 결과가 있다면 에러
@@ -122,11 +109,12 @@ export class BookingsService {
     //총 금액 계산
     const totalPrice = await this.calculateTotalPrice({ price, surcharge });
 
+    console.log(date);
     //없으면 예약
     const data = await this.bookingsRepository.createBooking({
       userId,
       petsitterId,
-      date: parseDate,
+      date,
       animalType,
       serviceType,
       location,
@@ -153,6 +141,7 @@ export class BookingsService {
   findBookingByBookingId = async ({
     bookingId,
     userId,
+    // whereType,
     includePetsitter,
     petsitterId,
   }) => {
@@ -195,13 +184,11 @@ export class BookingsService {
       location: location ?? booking.location,
     });
 
-    let parseDate = date ? this.parseDate({ date }) : booking.date;
-
-    if (parseDate.toString() !== booking.date.toString()) {
+    if (date !== booking.date) {
       //해당하는 날짜에 예약이 있는지 확인
       const existingBooking = await this.findBookingByPetsitterId({
         petsitterId: booking.petsitterId,
-        date: parseDate,
+        date,
       });
 
       if (existingBooking) {
@@ -215,7 +202,7 @@ export class BookingsService {
 
     const updatedBooking = await this.bookingsRepository.updateBooking({
       bookingId,
-      date: parseDate,
+      date,
       serviceType,
       animalType,
       location,
