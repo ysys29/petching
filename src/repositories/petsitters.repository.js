@@ -15,7 +15,7 @@ export class PetsitterRepository {
     return data;
   };
 
-  //펫시터 검색
+  //펫시터 이름으로 검색
   searchSitters = async (query) => {
     const data = await prisma.petsitter.findMany({
       where: {
