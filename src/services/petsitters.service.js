@@ -22,7 +22,7 @@ export class PetsitterService {
       };
     });
   };
-
+  //펫시터 상세조회
   readSitter = async (id) => {
     const sitter = await this.petsitterRepository.readSitter(id);
 
@@ -36,5 +36,26 @@ export class PetsitterService {
       createdAt: sitter.createdAt,
       updatedAt: sitter.updatedAt,
     };
+  };
+
+  //펫시터 검색
+  searchSitters = async (query) => {
+    const sitters = await this.petsitterRepository.searchSitters(query);
+
+    sitters.sort((a, b) => {
+      return b.createdAt - a.createdAt;
+    });
+
+    return sitters.map((sitter) => {
+      return {
+        id: sitter.id,
+        name: sitter.name,
+        experience: sitter.experience,
+        introduce: sitter.introduce,
+        localtion: sitter.localtion,
+        profileImage: sitter.profileImage,
+        createdAt: sitter.createdAt,
+      };
+    });
   };
 }

@@ -35,4 +35,22 @@ export class PetsitterController {
       next(err);
     }
   };
+
+  //펫시터 검색 기능
+  lookForSitter = async (req, res, next) => {
+    try {
+      const { query } = req.query;
+      console.log('test');
+
+      let data = await this.petsitterService.searchSitters(query);
+
+      return res.status(HTTP_STATUS.OK).json({
+        status: HTTP_STATUS.OK,
+        message: '시터 검색에 성공하였습니다',
+        data,
+      });
+    } catch (err) {
+      next(err);
+    }
+  };
 }
