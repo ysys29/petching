@@ -102,8 +102,8 @@ model Booking {
   animalType  AnimalType  @map("animal_type")
   serviceType ServiceType @map("service")
   location    String      @map("location")
-  content     String      @map("content") @db.Text //요구사항
-  date        String      @map("date")
+  content     String?     @map("content") @db.Text //요구사항
+  date        DateTime    @map("date")
   totalPrice  Int         @map("total_price")
 
   createdAt DateTime @default(now()) @map("created_at")

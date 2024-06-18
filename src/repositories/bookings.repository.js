@@ -38,7 +38,7 @@ export class BookingsRepository {
         id: findBooking.id,
         userId: findBooking.userId,
         petsitterName: findBooking.petsitter.name,
-        date: findBooking.date,
+        date: findBooking.date.toISOString().split('T')[0],
         animalType: findBooking.animalType,
         serviceType: findBooking.serviceType,
         location: findBooking.location,
@@ -91,7 +91,7 @@ export class BookingsRepository {
         id: booking.id,
         petsitterName: booking.petsitter.name,
         animalType: booking.animalType,
-        date: booking.date,
+        date: booking.date.toISOString().split('T')[0],
         totalPrice: booking.totalPrice,
       };
     });

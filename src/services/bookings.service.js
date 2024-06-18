@@ -8,10 +8,11 @@ export class BookingsService {
   //펫시터 아이디로 예약 찾기
   findBookingByPetsitterId = async ({ petsitterId, date }) => {
     //해당 날짜에 펫시터의 예약이 차있는지 find하기
-    const existingBooking = await this.bookingsRepository.findBooking({
-      petsitterId,
-      date,
-    });
+    const existingBooking =
+      await this.bookingsRepository.findBookingByPetsitterId({
+        petsitterId,
+        date,
+      });
 
     return existingBooking;
   };
@@ -41,7 +42,7 @@ export class BookingsService {
     //펫시터가 해당 서비스를 제공하는지 확인
     const service = petsitter.petsitterService.find(
       (serv) =>
-        serv.serviceType === serviceType && serv.animalType === animalType
+        serv.animalType === animalType && serv.serviceType === serviceType
     );
 
     if (!service) {
@@ -69,6 +70,16 @@ export class BookingsService {
     return totalPrice;
   };
 
+  //날짜 파싱
+  parseDate = ({ date }) => {
+    const parts = date.split('-');
+    const formattedDate = `${parts[0]}-${parts[1]}-${parts[2]}T00:00:00.000Z`;
+
+    const parseDate = new Date(formattedDate);
+
+    return parseDate;
+  };
+
   //예약 생성
   createBooking = async ({
     userId,
@@ -92,10 +103,13 @@ export class BookingsService {
       location,
     });
 
+    //날짜 타입 변환 string => datetime
+    const parseDate = this.parseDate({ date });
+
     //해당 날짜에 예약이 차있는지 확인
     const existingBooking = await this.findBookingByPetsitterId({
       petsitterId,
-      date,
+      date: parseDate,
     });
 
     //예약 결과가 있다면 에러
@@ -110,7 +124,7 @@ export class BookingsService {
     const data = await this.bookingsRepository.createBooking({
       userId,
       petsitterId,
-      date,
+      date: parseDate,
       animalType,
       serviceType,
       location,
@@ -188,6 +202,21 @@ export class BookingsService {
       location = booking.location;
     }
 
+    let parseDate = date ? this.parseDate({ date }) : booking.date;
+
+    if (parseDate.toString() !== booking.date.toString()) {
+      const existingBooking = await this.findBookingByPetsitterId({
+        petsitterId: booking.petsitterId,
+        date: parseDate,
+      });
+
+      if (existingBooking) {
+        throw new HttpError.BadRequest(
+          '해당하는 날짜에 이미 예약이 차있습니다.'
+        );
+      }
+    }
+
     const { price, surcharge } = await this.validateService({
       petsitter,
       animalType,
@@ -197,10 +226,9 @@ export class BookingsService {
 
     const totalPrice = await this.calculateTotalPrice({ price, surcharge });
 
-    console.log('sfdsf', bookingId);
     const updatedBooking = await this.bookingsRepository.updateBooking({
       bookingId,
-      date,
+      date: parseDate,
       serviceType,
       animalType,
       location,
