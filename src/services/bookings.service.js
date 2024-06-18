@@ -16,19 +16,6 @@ export class BookingsService {
     return existingBooking;
   };
 
-  //부킹 아이디로 예약 찾기
-  findBookingByBookingId = async ({ bookingId, userId }) => {
-    const booking = await this.bookingsRepository.findBookingByuBookingId({
-      bookingId,
-    });
-
-    if (booking.userId !== userId) {
-      throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
-    }
-
-    return booking;
-  };
-
   // 펫시터 찾기
   findPetsitterById = async ({ petsitterId }) => {
     //해당하는 펫시터가 있는지 찾기
@@ -139,6 +126,35 @@ export class BookingsService {
     const bookings = await this.bookingsRepository.findAllBookings({ userId });
 
     return bookings;
+  };
+
+  //예약 상세 조회 --- 예약 한개 찾기로 해서
+  findBookingByBookingId = async ({ bookingId, userId, includePetsitter }) => {
+    const booking = await this.bookingsRepository.findBookingByBookingId({
+      bookingId,
+      includePetsitter,
+    });
+
+    if (!booking) {
+      throw new HttpError.NotFound('예약이 존재하지 않습니다.');
+    }
+
+    if (booking.userId !== userId) {
+      throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
+    }
+
+    return booking;
+  };
+
+  //예약 상세 조회
+  findBooking = async ({ bookingId, userId }) => {
+    const booking = await this.findBookingByBookingId({
+      bookingId,
+      userId,
+      includePetsitter: true,
+    });
+
+    return booking;
   };
 
   // 예약 취소

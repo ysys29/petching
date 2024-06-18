@@ -26,10 +26,27 @@ export class BookingsRepository {
   };
 
   //부킹 아이디로 예약 찾기
-  findBookingByuBookingId = async ({ bookingId }) => {
-    const findBooking = await this.prisma.booking.findUnique({
+  findBookingByBookingId = async ({ bookingId, includePetsitter = false }) => {
+    let findBooking = await this.prisma.booking.findUnique({
       where: { id: bookingId },
+      include: { petsitter: includePetsitter },
     });
+
+    //findBooking이 존재하지 않으면 if문 내에서 문제가 생김
+    if (findBooking && includePetsitter) {
+      findBooking = {
+        id: findBooking.id,
+        userId: findBooking.userId,
+        petsitterName: findBooking.petsitter.name,
+        date: findBooking.date,
+        animalType: findBooking.animalType,
+        serviceType: findBooking.serviceType,
+        location: findBooking.location,
+        content: findBooking.content,
+        totalPrice: findBooking.totalPrice,
+        createdAt: findBooking.createdAt,
+      };
+    }
 
     return findBooking;
   };

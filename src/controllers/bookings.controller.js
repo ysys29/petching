@@ -53,6 +53,19 @@ export class BookingsController {
   // 예약 상세 조회
   findBooking = async (req, res, next) => {
     try {
+      // const userId = req.user.id;
+      const userId = 1;
+      const bookingId = Number(req.params.bookingId);
+
+      const booking = await this.bookingsService.findBooking({
+        userId,
+        bookingId,
+      });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '예약 상세 조회 내역', booking });
+      return;
     } catch (error) {
       next(error);
     }
