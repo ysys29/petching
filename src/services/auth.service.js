@@ -34,17 +34,12 @@ export class AuthService {
     const petsitter = await this.usersRepository.findPetsitterByEmail({
       email,
     });
-    console.log(petsitter.password);
 
-    // const decodedPassword = petsitter
-    //   ? await bcrypt.compare(password, petsitter.password)
-    //   : null;
+    const decodedPassword = petsitter
+      ? await bcrypt.compare(password, petsitter.password)
+      : null;
 
-    // if (!petsitter || !decodedPassword) {
-    //   throw new HttpError.Unauthorized('인증 정보가 유효하지 않습니다.');
-    // }
-
-    if (petsitter.password !== password) {
+    if (!petsitter || !decodedPassword) {
       throw new HttpError.Unauthorized('인증 정보가 유효하지 않습니다.');
     }
 
