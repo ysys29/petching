@@ -39,7 +39,19 @@ export class BookingsController {
   findAllBookings = async (req, res, next) => {
     try {
       // const userId = req.user.id
-      const userId = 1;
+      // const { role } = req.user;
+      // const role = 'petsitter';
+      // if (role === 'user') {
+      //   const userId = req.user.id;
+      // } else {
+      //   // const petsitterId = req.user.id;
+      //   const petsitterId = 9;
+      // }
+      const role = 'petsitter';
+      const userId = 9;
+
+      const whereType = role === 'user' ? { userId } : { petsitterId: userId };
+
       let { sort } = req.query;
 
       sort = sort?.toLowerCase();
@@ -49,7 +61,9 @@ export class BookingsController {
       }
 
       const bookings = await this.bookingsService.findAllBookings({
-        userId,
+        // userId,
+        // petsitterId,
+        whereType,
         sort,
       });
 
@@ -125,6 +139,23 @@ export class BookingsController {
       res
         .status(HTTP_STATUS.OK)
         .json({ message: '예약을 취소했습니다.', data: id });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // 펫시터가 자신이 받은 예약 목록 확인
+  petsitterBookings = async (req, res, next) => {
+    try {
+      // cosnt petsitterId = req.petsitterid
+      const petsitterId = 9;
+      const bookings = await this.bookingsService.findAllBookings({
+        petsitterId,
+      });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '요청된 예약 목록', bookings });
     } catch (error) {
       next(error);
     }

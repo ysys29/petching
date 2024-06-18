@@ -138,9 +138,11 @@ export class BookingsService {
   };
 
   // 예약 목록 조회
-  findAllBookings = async ({ userId, sort }) => {
+  findAllBookings = async ({ whereType, sort }) => {
     const bookings = await this.bookingsRepository.findAllBookings({
-      userId,
+      // userId,
+      // petsitterId,
+      whereType,
       sort,
     });
 

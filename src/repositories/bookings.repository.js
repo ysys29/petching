@@ -80,9 +80,9 @@ export class BookingsRepository {
   };
 
   //예약 목록 조회
-  findAllBookings = async ({ userId, sort }) => {
+  findAllBookings = async ({ whereType, sort }) => {
     let bookings = await this.prisma.booking.findMany({
-      where: { userId },
+      where: whereType,
       orderBy: { createdAt: sort },
       include: { petsitter: true },
     });
@@ -90,6 +90,7 @@ export class BookingsRepository {
     return bookings.map((booking) => {
       return {
         id: booking.id,
+        userId: booking.userId,
         petsitterName: booking.petsitter.name,
         animalType: booking.animalType,
         date: booking.date.toISOString().split('T')[0],
