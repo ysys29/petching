@@ -44,6 +44,7 @@ export class BookingsRepository {
         location: findBooking.location,
         content: findBooking.content,
         totalPrice: findBooking.totalPrice,
+        status: findBooking.status,
         createdAt: findBooking.createdAt,
       };
     }
@@ -93,6 +94,7 @@ export class BookingsRepository {
         animalType: booking.animalType,
         date: booking.date.toISOString().split('T')[0],
         totalPrice: booking.totalPrice,
+        status: booking.status,
       };
     });
   };

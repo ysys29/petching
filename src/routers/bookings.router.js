@@ -22,7 +22,10 @@ bookingRouter.get('/:bookingId', bookingsController.findBooking);
 //예약 수정
 bookingRouter.patch('/:bookingId', bookingsController.updateBooking);
 
-//예약 취소
-bookingRouter.delete('/:bookingId', bookingsController.cancelBooking);
+//예약 취소 --유저가
+bookingRouter.patch('/:bookingId', bookingsController.cancelBooking);
+
+//예약 승인 or 거절 --펫시터가
+bookingRouter.patch('/:bookingId/status', bookingsController.statusUpdate);
 
 export { bookingRouter };

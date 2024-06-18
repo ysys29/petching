@@ -109,7 +109,7 @@ export class BookingsController {
     }
   };
 
-  // 예약 취소
+  // 예약 취소 --유저가 취소
   cancelBooking = async (req, res, next) => {
     try {
       //   const userId = req.user.id;
@@ -124,7 +124,30 @@ export class BookingsController {
 
       res
         .status(HTTP_STATUS.OK)
-        .json({ message: '예약을 취소했습니다.', date: id });
+        .json({ message: '예약을 취소했습니다.', data: id });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // 예약 상태 변경 --펫시터만 들어올 수 있게 라우터의 미들웨어에서 처리
+  statusUpdate = async (req, res, next) => {
+    try {
+      // const petsitterId = req.user.id
+      const petsitterId = 9;
+      const bookingId = Number(req.params.bookingId);
+      const { status } = req.body;
+
+      const id = await this.bookingsService.bookingStatusUpdate({
+        petsitterId,
+        bookingId,
+        status,
+      });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ message: '예약 상태를 변경했습니다.', data: id });
+      return;
     } catch (error) {
       next(error);
     }

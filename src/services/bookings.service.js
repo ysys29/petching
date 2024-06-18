@@ -14,6 +14,8 @@ export class BookingsService {
         date,
       });
 
+    console.log(existingBooking);
+
     return existingBooking;
   };
 
@@ -146,7 +148,12 @@ export class BookingsService {
   };
 
   //예약 상세 조회 --- 예약 한개 찾기로 해서
-  findBookingByBookingId = async ({ bookingId, userId, includePetsitter }) => {
+  findBookingByBookingId = async ({
+    bookingId,
+    userId,
+    includePetsitter,
+    petsitterId,
+  }) => {
     const booking = await this.bookingsRepository.findBookingByBookingId({
       bookingId,
       includePetsitter,
@@ -156,7 +163,7 @@ export class BookingsService {
       throw new HttpError.NotFound('예약이 존재하지 않습니다.');
     }
 
-    if (booking.userId !== userId) {
+    if (booking.userId !== userId && booking.petsitterId !== petsitterId) {
       throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
     }
 
@@ -218,10 +225,10 @@ export class BookingsService {
   };
 
   //상태 변경
-  bookingStatusUpdate = async ({ userId, bookingId, status }) => {
-    console.log(status);
+  bookingStatusUpdate = async ({ userId, bookingId, petsitterId, status }) => {
     const booking = await this.findBookingByBookingId({
       userId,
+      petsitterId,
       bookingId,
     });
 
