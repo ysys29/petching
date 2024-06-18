@@ -122,8 +122,11 @@ export class BookingsService {
   };
 
   // 예약 목록 조회
-  findAllBookings = async ({ userId }) => {
-    const bookings = await this.bookingsRepository.findAllBookings({ userId });
+  findAllBookings = async ({ userId, sort }) => {
+    const bookings = await this.bookingsRepository.findAllBookings({
+      userId,
+      sort,
+    });
 
     return bookings;
   };

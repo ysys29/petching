@@ -40,8 +40,18 @@ export class BookingsController {
     try {
       // const userId = req.user.id
       const userId = 1;
+      let { sort } = req.query;
 
-      const bookings = await this.bookingsService.findAllBookings({ userId });
+      sort = sort?.toLowerCase();
+
+      if (sort !== 'desc' && sort !== 'asc') {
+        sort = 'desc';
+      }
+
+      const bookings = await this.bookingsService.findAllBookings({
+        userId,
+        sort,
+      });
 
       res.status(HTTP_STATUS.OK).json({ message: '예약 목록', bookings });
       return;

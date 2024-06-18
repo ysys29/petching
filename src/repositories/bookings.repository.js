@@ -79,9 +79,10 @@ export class BookingsRepository {
   };
 
   //예약 목록 조회
-  findAllBookings = async ({ userId }) => {
+  findAllBookings = async ({ userId, sort }) => {
     let bookings = await this.prisma.booking.findMany({
       where: { userId },
+      orderBy: { createdAt: sort },
       include: { petsitter: true },
     });
 
