@@ -46,13 +46,8 @@ export class ReviewService{
     };
 
     update = async({reviewId, userId, rating, comment}) => {
-      const review = await prisma.review.findFirst({
-        where: { id: +reviewId},
-      })
-      if(!review){
-        throw new Error('리뷰를 찾을 수 없습니다.');
-      }
-      
+    
+    
       
       if(!rating){
         throw new Error('수정하실 평점을 작성해주세요')
@@ -67,5 +62,15 @@ export class ReviewService{
     };
 
 
-    delete = async () => {};
+    delete = async ({ reviewId, userId }) => {
+    const review = await reviewRepository.findById(reviewId);
+    if(!review){
+      throw new Error('리뷰를 찾을 수 없습니다.')
+    }
+      if (review.userId !== userId){
+        throw new Error('해당 리뷰를 삭제할 권한이 없습니다.')
+      }
+      const deletedreview = await reviewRepository.delete({ reviewId, userId})
+      return deletedreview;
+};
 }
