@@ -4,7 +4,7 @@ import { SERVER_PORT } from './constants/env.constant.js';
 import { apiRouter } from './routers/index.js';
 import errorHandler from './middlewares/error-handler.middleware.js';
 import { HTTP_STATUS } from './constants/http-status.constant.js';
-import  logMiddleware  from './middlewares/log.middleware.js';
+import logMiddleware from './middlewares/log.middleware.js';
 
 const app = express();
 

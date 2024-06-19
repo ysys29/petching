@@ -69,16 +69,16 @@ model PetsitterService {
 }
 
 enum AnimalType {
-  dog
-  cat
-  etc
+  DOG
+  CAT
+  ETC
 }
 
 enum ServiceType {
-  walk
-  shower
-  pickup
-  feed
+  WALK
+  SHOWER
+  PICKUP
+  FEED
 }
 
 model PetsitterLocation {
@@ -99,10 +99,13 @@ model Booking {
   id          Int         @id @default(autoincrement()) @map("id")
   userId      Int         @map("user_id")
   petsitterId Int         @map("petsitter_id")
-  anmalType   AnimalType  @map("animal_type")
-  service     ServiceType @map("service")
-  content     String      @map("content") @db.Text //요구사항
+  animalType  AnimalType  @map("animal_type")
+  serviceType ServiceType @map("service")
+  location    String      @map("location")
+  content     String?     @map("content") @db.Text //요구사항
   date        DateTime    @map("date")
+  totalPrice  Int         @map("total_price")
+  status      Status      @default(PENDING) @map("status")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -111,6 +114,14 @@ model Booking {
   petsitter Petsitter @relation(fields: [petsitterId], references: [id], onDelete: Cascade)
 
   @@map("bookings")
+}
+
+enum Status {
+  REJECTED //거절
+  CANCELED //취소
+  PENDING //보류
+  APPROVED //승인
+  DONE //끝남
 }
 
 model Bookmark {

@@ -2,10 +2,10 @@ import { prisma } from "../utils/prisma.utils.js";
 
 export class ReviewRepository {
     create = async({ userId, petsitterId,rating,comment })=>{
-        const petsitter = await prisma.petsitter.findUnique({
-            where: {
-              id: 1,
-            },
+    
+      
+      const petsitter = await prisma.petsitter.findUnique({
+            where: {id: +petsitterId },
           });
 
           if (!petsitter) {
@@ -17,7 +17,7 @@ export class ReviewRepository {
               userId: userId,
               petsitterId: +petsitterId,
               rating: +rating,
-              comment: comment,
+              comment,
             },
           });
           return review;

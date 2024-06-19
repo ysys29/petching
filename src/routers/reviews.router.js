@@ -1,9 +1,9 @@
-import express, { Router } from 'express';
+import express from 'express';
 import authMiddleware from '../middlewares/require-access-token.js';
 import { ReviewController } from '../controllers/reviews.controller.js';
 import { ReviewService } from '../services/reviews.service.js';
 import { ReviewRepository } from '../repositories/reviews.repository.js';
-
+import tempMiddleware from '../middlewares/temp.middleware.js';
 
 const reviewRouter = express.Router();
 
@@ -13,19 +13,17 @@ const reviewsController = new ReviewController(reviewsService);
 
 
 
-reviewRouter.post('/:petsitterId', reviewsController.create);
+reviewRouter.post('/:petsitterId',tempMiddleware, reviewsController.create);
 
-reviewRouter.get('/:petsitterId', authMiddleware, reviewsController.readMany);
+reviewRouter.get('/:petsitterId', tempMiddleware, reviewsController.readMany);
 
-reviewRouter.get('/myreviews/:userId', authMiddleware, reviewsController.myreadMany);
+reviewRouter.get('/myreviews/:userId', tempMiddleware, reviewsController.myreadMany);
 
-reviewRouter.get('/:reviewId', authMiddleware, reviewsController.readOne);
+reviewRouter.get('/:reviewId', tempMiddleware, reviewsController.readOne);
 
-reviewRouter.patch('/myreviews/:reviewId', authMiddleware, reviewsController.update);
+reviewRouter.patch('/myreviews/:reviewId', tempMiddleware, reviewsController.update);
 
-reviewRouter.delete('/myreviews/:reviewId', authMiddleware, reviewsController.delete);
-
-
+reviewRouter.delete('/myreviews/:reviewId', tempMiddleware, reviewsController.delete);
 
 
 
