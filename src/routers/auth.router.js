@@ -25,6 +25,6 @@ authRouter.post('/sign-in', signInValidator, authController.signIn);
 authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
 
 // 로그아웃
-authRouter.post('/sign-in', requireRefreshToken, authController.signOut);
+authRouter.post('/sign-out', requireRefreshToken, authController.signOut);
 
 export { authRouter };
