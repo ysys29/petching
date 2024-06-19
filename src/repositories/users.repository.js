@@ -43,10 +43,18 @@ export class UsersRepository {
   findOneId = async (id) => {
     const data = await this.prisma.user.findUnique({
       where: { id },
-      // omit: { password: true },
     });
+    const result = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      introduce: data.introduce,
+      profileImage: data.profileImage,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt
+    }
 
-    return data;
+    return result;
   };
 
   findOneRefreshTokenId = async (id) => {
@@ -58,7 +66,7 @@ export class UsersRepository {
   };
 
   refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
-    if (!hashedRefreshToken) {
+    if (hashedRefreshToken === 'nodata') {
       await this.prisma.refreshToken.update({
         where: {
           userId: id,
