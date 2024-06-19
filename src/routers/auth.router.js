@@ -40,4 +40,7 @@ authRouter.post(
 // 로그아웃
 authRouter.post('/sign-out', requireRefreshToken, authController.signOut);
 
+// 토큰 재발급
+authRouter.post('/renew-tokens', requireRefreshToken, authController.renewTokens);
+
 export { authRouter };
