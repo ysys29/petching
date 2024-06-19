@@ -23,7 +23,7 @@ authRouter.post('/sign-in', signInValidator, authController.signIn);
 //펫시터 회원가입
 authRouter.post(
   '/petsitters/sign-up',
-  //   signUpValidator,
+  signUpValidator,
   authController.signUpPetsitter
 );
 
