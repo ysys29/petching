@@ -33,7 +33,7 @@ const joiSchema = Joi.object({
   }),
 });
 
-export const signupValidator = async (req, res, next) => {
+export const signUpValidator = async (req, res, next) => {
   try {
     console.log(req.body);
     await joiSchema.validateAsync(req.body);

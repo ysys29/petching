@@ -1,12 +1,13 @@
 import Joi from 'joi';
+import { MESSAGES } from '../../constants/message.constant.js';
 
 const schema = Joi.object({
   email: Joi.string().email().required().messages({
-    'any.required': '이메일을 입력해 주세요.',
-    'string.email': '이메일 형식이 올바르지 않습니다.',
+    'string.email': MESSAGES.AUTH.COMMON.EMAIL.INVALID_FORMAT,
+    'any.required': MESSAGES.AUTH.COMMON.EMAIL.REQUIRED,
   }),
   password: Joi.string().required().messages({
-    'any.required': '비밀번호를 입력해 주세요.',
+    'any.required': MESSAGES.AUTH.COMMON.PASSWORD.REQUIRED,
   }),
 });
 
