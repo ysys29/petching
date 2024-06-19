@@ -45,6 +45,27 @@ export class ReviewService{
       
     };
 
-    update = async() => {};
+    update = async({reviewId, userId, rating, comment}) => {
+      const review = await prisma.review.findFirst({
+        where: { id: +reviewId},
+      })
+      if(!review){
+        throw new Error('리뷰를 찾을 수 없습니다.');
+      }
+      
+      
+      if(!rating){
+        throw new Error('수정하실 평점을 작성해주세요')
+      }
+
+      if(!comment){
+        throw new Error('수정하실 리뷰를 작성해주세요.')
+      }
+
+      const updatedReview = await reviewRepository.update({reviewId: +reviewId, userId, rating, comment})
+      return updatedReview;
+    };
+
+
     delete = async () => {};
 }
