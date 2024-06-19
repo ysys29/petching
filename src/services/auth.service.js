@@ -100,8 +100,10 @@ export class AuthService {
     const accessToken = createAccessToken({ id, role });
     const refreshToken = createRefreshToken({ id, role });
 
-    const hashedRefreshToken = bcrypt.hashSync(refreshToken, HASH_SALT_ROUNDS);
-    await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+    if( role === 'user') {
+      const hashedRefreshToken = bcrypt.hashSync(refreshToken, HASH_SALT_ROUNDS);
+      await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+    }
 
     return { accessToken, refreshToken };
   };
