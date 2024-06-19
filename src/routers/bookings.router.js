@@ -6,8 +6,10 @@ import { BookingsRepository } from '../repositories/bookings.repository.js';
 import { PetsitterRepository } from '../repositories/petsitters.repository.js';
 import { requireRoles } from '../middlewares/require-roles.middleware.js';
 import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
+import { bookingsValidator } from '../middlewares/validators/bookings-validator.middleware.js';
+import { updateBookingValidator } from '../middlewares/validators/updateBooking-validator.middleware.js';
 
-import tempMiddleware from '../middlewares/temp.middleware.js';
+// import tempMiddleware from '../middlewares/temp.middleware.js';
 
 const bookingRouter = express.Router();
 
@@ -22,25 +24,27 @@ const bookingsController = new BookingsController(bookingsService);
 //예약 생성
 bookingRouter.post(
   '/',
-  tempMiddleware,
+  bookingsValidator,
+  requireAccessToken,
   requireRoles(['user']),
   bookingsController.createBooking
 );
 
 //예약 목록 조회
-bookingRouter.get('/', tempMiddleware, bookingsController.findAllBookings);
+bookingRouter.get('/', requireAccessToken, bookingsController.findAllBookings);
 
 //예약 상세 조회
 bookingRouter.get(
   '/:bookingId',
-  tempMiddleware,
+  requireAccessToken,
   bookingsController.findBooking
 );
 
 //예약 수정
 bookingRouter.patch(
   '/:bookingId',
-  tempMiddleware,
+  updateBookingValidator,
+  requireAccessToken,
   requireRoles(['user']),
   bookingsController.updateBooking
 );
@@ -48,7 +52,7 @@ bookingRouter.patch(
 //예약 취소 --유저가
 bookingRouter.delete(
   '/:bookingId',
-  tempMiddleware,
+  requireAccessToken,
   requireRoles(['user']),
   bookingsController.cancelBooking
 );

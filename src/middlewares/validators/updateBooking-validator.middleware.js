@@ -1,29 +1,21 @@
 import Joi from 'joi';
 
 const schema = Joi.object({
-  petsitterId: Joi.number().required().messages({
-    'number.base': '펫시터의 아이디는 숫자로 입력해주세요.',
-    'any.required': '예약할 펫시터의 아이디를 입력해 주세요.',
-  }),
-  animalType: Joi.string().required().valid('DOG', 'CAT', 'ETC').messages({
-    'any.required': '동물 유형을 입력해 주세요',
+  animalType: Joi.string().optional().valid('DOG', 'CAT', 'ETC').messages({
     'any.only': '동물 타입은 DOG, CAT, ETC 중 선택할 수 있습니다.',
   }),
   serviceType: Joi.string()
-    .required()
+    .optional()
     .valid('WALK', 'SHOWER', 'PICKUP', 'FEED')
     .messages({
-      'any.required': '서비스 유형은 필수입니다.',
       'any.only':
         '서비스 유형은 WALK, SHOWER, PICKUP, FEED 중 선택할 수 있습니다.',
     }),
-  location: Joi.string()
-    .required()
-    .messages({ 'any.required': '예약 장소를 선택해 주세요.' }),
+  location: Joi.string().optional(),
   content: Joi.string().optional(),
   date: Joi.string()
     .pattern(/^\d{4}-\d{2}-\d{2}$/)
-    .required()
+    .optional()
     .custom((value, helpers) => {
       // 날짜 유효성 검증
       const date = new Date(value);
@@ -47,12 +39,13 @@ const schema = Joi.object({
       return value;
     })
     .messages({
-      'any.required': '날짜를 선택해 주세요.',
       'string.pattern.base': '날짜는 YYYY-MM-DD 형식이어야 합니다.',
     }),
-});
+})
+  .min(1)
+  .message({ 'object.min': '수정할 내용을 입력해 주세요.' });
 
-export const bookingsValidator = async (req, res, next) => {
+export const updateBookingValidator = async (req, res, next) => {
   try {
     await schema.validateAsync(req.body);
     next();

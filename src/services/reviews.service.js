@@ -1,3 +1,4 @@
+
 import { ReviewRepository } from "../repositories/reviews.repository.js";
 import { prisma } from "../utils/prisma.utils.js";
 
@@ -21,7 +22,15 @@ export class ReviewService{
     return reviews;
   }
 
-    myreadMany = async() => {};
+    myreadMany = async(userId) => {
+      
+      const reviews = await reviewRepository.myreadMany(userId)
+    
+      return reviews;
+   
+};  
+    readOne = async () => {};
+    
     update = async() => {};
     delete = async () => {};
 }

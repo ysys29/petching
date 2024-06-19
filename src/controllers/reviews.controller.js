@@ -35,12 +35,11 @@ export class ReviewController{
     };
 
     myreadMany = async (req, res, next) => {
-        try {
-            const userId = req.user.id;
-            const reviewData = await prisma.review.findMany({
-                where: { userId: +userId },
-            });
-            return res.status(200).json(reviewData);
+        const { userId } = req.params;
+          try {
+           
+            const reviews = await reviewService.myreadMany(userId);
+            return res.status(200).json(reviews);
         } catch (err) {
             next(err);
         }

@@ -29,7 +29,13 @@ export class ReviewRepository {
               petsitterId: +petsitterId,
             },
             include: {
-              user: true, 
+              user: {
+                select:{
+                    id:true,
+                    name: true,
+                    profileImage: true,
+              }
+            }
             },
             orderBy: {
               createdAt: 'desc', 
@@ -38,8 +44,26 @@ export class ReviewRepository {
     return reviews;
 };
 
-    myreadMany=async( )=>{
-        
+    myreadMany=async(userId )=>{
+        const reviews = await prisma.review.findMany({
+            where: {
+              userId: +userId,
+            },
+            include: {
+              user: {
+                select:{
+                  id:true,
+                  name: true,
+                  profileImage: true,
+                },
+              },
+            
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          });
+          return reviews;
     };
     readOne=async( )=>{
         

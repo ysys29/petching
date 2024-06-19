@@ -17,13 +17,13 @@ reviewRouter.post('/:petsitterId',tempMiddleware, reviewsController.create);
 
 reviewRouter.get('/:petsitterId', tempMiddleware, reviewsController.readMany);
 
-reviewRouter.get('/myreviews/:userId',  reviewsController.myreadMany);
+reviewRouter.get('/myreviews/:userId', tempMiddleware,reviewsController.myreadMany);
 
-reviewRouter.get('/review/:reviewId', reviewsController.readOne);
+reviewRouter.get('/review/:reviewId', tempMiddleware, reviewsController.readOne);
 
 reviewRouter.patch('/myreviews/:reviewId', tempMiddleware,reviewsController.update);
 
-reviewRouter.delete('/myreviews/:reviewId',  reviewsController.delete);
+reviewRouter.delete('/myreviews/:reviewId',  tempMiddleware, reviewsController.delete);
 
 
 
