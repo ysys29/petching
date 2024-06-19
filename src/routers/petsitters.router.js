@@ -6,15 +6,18 @@ import { PetsitterService } from '../services/petsitters.service.js';
 import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
 import { requireRoles } from '../middlewares/require-roles.middleware.js';
 import { PetsitterServiceRepository } from '../repositories/petsitterService.repository.js';
+import { PetsitterLocationRepository } from '../repositories/petsitterLocation.repository.js';
 import { updateServiceValidator } from '../middlewares/validators/petsitter-service-validator.middleware.js';
 
 const petsitterRouter = express.Router();
 
 const petsitterRepository = new PetsitterRepository(prisma);
 const petsitterServiceRepository = new PetsitterServiceRepository(prisma);
+const petsitterLocationRepository = new PetsitterLocationRepository(prisma);
 const petsitterService = new PetsitterService(
   petsitterRepository,
-  petsitterServiceRepository
+  petsitterServiceRepository,
+  petsitterLocationRepository
 );
 const petsitterController = new PetsitterController(petsitterService);
 
@@ -36,7 +39,15 @@ petsitterRouter.post(
   requireAccessToken,
   requireRoles(['petsitter']),
   updateServiceValidator,
-  petsitterController.serviceUpdate
+  petsitterController.serviceCreate
+);
+
+// 펫시터 서비스 지역 추가
+petsitterRouter.post(
+  '/location',
+  requireAccessToken,
+  requireRoles(['petsitter']),
+  petsitterController.locationCreate
 );
 
 export { petsitterRouter };
