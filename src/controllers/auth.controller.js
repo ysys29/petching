@@ -56,7 +56,7 @@ export class AuthController {
     }
   };
 
-
+  
   //펫시터 회원가입
   signUpPetsitter = async (req, res, next) => {
     try {
@@ -110,13 +110,42 @@ export class AuthController {
     try {
       const user = req.user;
 
-      await this.authService.signOut({ id: user.id, hashedRefreshToken: 'nodata' });
+      await this.authService.signOut({
+        id: user.id,
+        hashedRefreshToken: 'nodata',
+      });
 
       return res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
         message: MESSAGES.AUTH.SIGN_OUT.SUCCEED,
-        data: { id: user.id }
-      })
+        data: { id: user.id },
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  // 토큰 재발급
+  renewTokens = async (req, res, next) => {
+    try {
+      const user = req.user;
+      const id = user.id;
+      const role = user.role;
+
+      console.log(id, role)
+
+      const { accessToken, refreshToken } =
+        await this.authService.createAccessAndRefreshToken({
+          id,
+          role,
+        });
+
+      return res.status(HTTP_STATUS.OK).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.AUTH.SIGN_IN.TOKEN,
+        accessToken,
+        refreshToken,
+      });
     } catch (error) {
       next(error);
     }
