@@ -1,5 +1,5 @@
 import express from 'express';
-import authMiddleware from '../middlewares/require-access-token.js';
+// import authMiddleware from '../middlewares/require-access-token.js';
 import { ReviewController } from '../controllers/reviews.controller.js';
 import { ReviewService } from '../services/reviews.service.js';
 import { ReviewRepository } from '../repositories/reviews.repository.js';
@@ -17,13 +17,15 @@ reviewRouter.post('/:petsitterId',tempMiddleware, reviewsController.create);
 
 reviewRouter.get('/:petsitterId', tempMiddleware, reviewsController.readMany);
 
-reviewRouter.get('/myreviews/:userId', tempMiddleware, reviewsController.myreadMany);
+reviewRouter.get('/myreviews/:userId',  reviewsController.myreadMany);
 
-reviewRouter.get('/:reviewId', tempMiddleware, reviewsController.readOne);
+reviewRouter.get('/review/:reviewId', reviewsController.readOne);
 
-reviewRouter.patch('/myreviews/:reviewId', tempMiddleware, reviewsController.update);
+reviewRouter.patch('/myreviews/:reviewId', tempMiddleware,reviewsController.update);
 
-reviewRouter.delete('/myreviews/:reviewId', tempMiddleware, reviewsController.delete);
+reviewRouter.delete('/myreviews/:reviewId',  reviewsController.delete);
+
+
 
 
 

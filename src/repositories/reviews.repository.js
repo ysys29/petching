@@ -22,9 +22,22 @@ export class ReviewRepository {
           });
           return review;
     };
-    readMany= async( )=>{
-        
-    };
+
+    readMany = async(petsitterId)=>{
+        const reviews = await prisma.review.findMany({
+            where: {
+              petsitterId: +petsitterId,
+            },
+            include: {
+              user: true, 
+            },
+            orderBy: {
+              createdAt: 'desc', 
+            },
+          });
+    return reviews;
+};
+
     myreadMany=async( )=>{
         
     };

@@ -22,26 +22,18 @@ export class ReviewController{
       };
       
     readMany =  async (req, res, next) => {
-        try {
-            const { petsitterId } = req.params;
-       
-            const petsitterData = await prisma.petsitter.findFirst({
-                where: { id: +petsitterId },
-            });
+     
+      try {
+        const { petsitterId } = req.params;
+
+        const reviews = await reviewService.readMany(petsitterId)
     
-            if (!petsitterData) {
-                return res.status(400).json({ message: "펫시터를 찾을 수 없습니다." });
-            }
-    
-            const reviewData = await prisma.review.findMany({
-                where: { petsitterId: +petsitterId },
-            });
-    
-            return res.status(200).json(reviewData);
+        res.status(200).json(reviews);
         } catch (err) {
             next(err);
         }
     };
+
     myreadMany = async (req, res, next) => {
         try {
             const userId = req.user.id;
@@ -53,6 +45,7 @@ export class ReviewController{
             next(err);
         }
     };
+
     readOne = async (req, res, next) => {
         try {
           const { reviewId } = req.params;
