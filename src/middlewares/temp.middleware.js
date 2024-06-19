@@ -19,6 +19,6 @@ export default async function (req, res, next) {
     role: 'petsitter',
   };
 
-  req.user = petsitter2;
+  req.user = user1;
   next();
 }
