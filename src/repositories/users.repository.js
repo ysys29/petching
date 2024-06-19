@@ -20,6 +20,17 @@ export class UsersRepository {
       },
     });
 
+    const findId = await this.prisma.user.findFirst({
+      where: { email },
+    });
+
+    const refreshTokenCreate = await this.prisma.refreshToken.create({
+      data: {
+        userId: findId.id,
+        refreshToken: null,
+      },
+    });
+
     return data;
   };
 
@@ -46,5 +57,16 @@ export class UsersRepository {
     });
 
     return data;
+  };
+
+  refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
+    const data = await this.prisma.refreshToken.update({
+      where: {
+        userId: id,
+      },
+      data: {
+        refreshToken: hashedRefreshToken,
+      },
+    });
   };
 }
