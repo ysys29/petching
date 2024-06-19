@@ -186,7 +186,13 @@ export class BookingsService {
       location: location ?? booking.location,
     });
 
-    if (date !== booking.date) {
+    console.log('date', date);
+    console.log('booking.date', booking.date);
+    console.log(date === booking.date);
+    console.log(typeof date);
+    console.log(typeof booking.date);
+
+    if (date.toString() !== booking.date.toString()) {
       //해당하는 날짜에 예약이 있는지 확인
       const existingBooking = await this.findBookingByPetsitterId({
         petsitterId: booking.petsitterId,
