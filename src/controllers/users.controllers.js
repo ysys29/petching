@@ -4,6 +4,7 @@ export default class UsersController {
   constructor(usersService) {
     this.usersService = usersService;
   }
+  // 프로필 조회
   readMe = async (req, res, next) => {
     try {
       const userId = req.user.id;
@@ -17,10 +18,14 @@ export default class UsersController {
       next(err);
     }
   };
+  //프로필 업데이트
   updateUsers = async (req, res, next) => {
     try {
       const userId = req.user.id;
       const userData = req.body;
+      if (req.file) {
+        userData.profileImage = req.file.path;
+      }
       const updatedUser = await this.usersService.updateUser(userId, userData);
       res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,

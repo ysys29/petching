@@ -1,8 +1,9 @@
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 const errorHandler = (err, req, res, next) => {
-
+  console.log(err);
   // joi 에러처리
+
   if (err.name === 'ValidationError') {
     return res.status(HTTP_STATUS.BAD_REQUEST).json({
       status: HTTP_STATUS.BAD_REQUEST,
@@ -14,7 +15,7 @@ const errorHandler = (err, req, res, next) => {
   if (err.status && err.message) {
     return res.status(err.status).json({
       status: err.status,
-      message: err.message
+      message: err.message,
     });
   }
 

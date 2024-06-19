@@ -1,8 +1,10 @@
 import express from 'express';
-import tempMiddleware from '../middlewares/temp.middleware.js';
+// import tempMiddleware from '../middlewares/temp.middleware.js';
 import UsersController from '../controllers/users.controllers.js';
 import UsersService from '../services/users.service.js';
 import { UsersRepository } from '../repositories/users.repository.js';
+import { updatePrifileValidator } from '../middlewares/validators/update-prifile-validator.middleware.js';
+import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
 import { prisma } from '../utils/prisma.utils.js';
 import { upload } from '../middlewares/upload-image.js';
 
@@ -13,12 +15,14 @@ const usersController = new UsersController(usersService);
 
 usersRouter.get(
   '/mypage',
-  tempMiddleware,
+  requireAccessToken,
   usersController.readMe.bind(usersController)
 );
 usersRouter.patch(
   '/mypage',
-  tempMiddleware,
+  upload.single('profileImage'),
+  requireAccessToken,
+  updatePrifileValidator,
   upload.single('profileImage'),
   usersController.updateUsers.bind(usersController)
 );
