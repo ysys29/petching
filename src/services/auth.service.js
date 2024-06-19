@@ -58,6 +58,10 @@ export class AuthService {
     return petsitter;
   };
 
+  signOut = async ({ id }) => {
+    await this.usersRepository.refreshTokenUpdate({ id });
+  }
+
   //액세스토큰, 리프레시 토큰 발급
   createAccessAndRefreshToken = async ({ id, role }) => {
     const accessToken = createAccessToken({ id, role });
