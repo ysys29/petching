@@ -3,14 +3,20 @@ import { prisma } from '../utils/prisma.utils.js';
 import { BookingsController } from '../controllers/bookings.controller.js';
 import { BookingsService } from '../services/bookings.service.js';
 import { BookingsRepository } from '../repositories/bookings.repository.js';
+import { PetsitterRepository } from '../repositories/petsitters.repository.js';
 import { requireRoles } from '../middlewares/require-roles.middleware.js';
+import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
 
 import tempMiddleware from '../middlewares/temp.middleware.js';
 
 const bookingRouter = express.Router();
 
 const bookingsRepository = new BookingsRepository(prisma);
-const bookingsService = new BookingsService(bookingsRepository);
+const petsitterRepository = new PetsitterRepository(prisma);
+const bookingsService = new BookingsService(
+  bookingsRepository,
+  petsitterRepository
+);
 const bookingsController = new BookingsController(bookingsService);
 
 //예약 생성
@@ -40,7 +46,7 @@ bookingRouter.patch(
 );
 
 //예약 취소 --유저가
-bookingRouter.patch(
+bookingRouter.delete(
   '/:bookingId',
   tempMiddleware,
   requireRoles(['user']),
@@ -50,7 +56,7 @@ bookingRouter.patch(
 //예약 승인 or 거절 --펫시터가
 bookingRouter.patch(
   '/:bookingId/status',
-  tempMiddleware,
+  requireAccessToken,
   requireRoles(['petsitter']),
   bookingsController.statusUpdate
 );

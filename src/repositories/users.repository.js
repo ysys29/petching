@@ -47,12 +47,4 @@ export class UsersRepository {
 
     return data;
   };
-
-  findPetsitterByEmail = async ({ email }) => {
-    const petsitter = await this.prisma.petsitter.findUnique({
-      where: { email },
-    });
-
-    return petsitter;
-  };
 }
