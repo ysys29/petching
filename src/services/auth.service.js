@@ -2,10 +2,12 @@ import { MESSAGES } from '../constants/message.constant.js';
 import { HttpError } from '../errors/http.error.js';
 import { HASH_SALT_ROUNDS } from '../constants/auth.constant.js';
 import bcrypt from 'bcrypt';
+import { createAccessToken, createRefreshToken } from '../utils/tokens.js';
 
 export class AuthService {
-  constructor(usersRepository) {
+  constructor(usersRepository, petsitterRepository) {
     this.usersRepository = usersRepository;
+    this.petsitterRepository = petsitterRepository;
   }
 
   // 회원가입
@@ -40,4 +42,29 @@ export class AuthService {
     const data = await 
     
   }
+
+  // 펫시터 로그인
+  signInPetsitter = async ({ email, password }) => {
+    const petsitter = await this.petsitterRepository.findPetsitterByEmail({
+      email,
+    });
+
+    const decodedPassword = petsitter
+      ? await bcrypt.compare(password, petsitter.password)
+      : null;
+
+    if (!petsitter || !decodedPassword) {
+      throw new HttpError.Unauthorized('인증 정보가 유효하지 않습니다.');
+    }
+
+    return petsitter;
+  };
+
+  //액세스토큰, 리프레시 토큰 발급
+  createAccessAndRefreshToken = async ({ id, role }) => {
+    const accessToken = createAccessToken({ id, role });
+    const refreshToken = createRefreshToken({ id, role });
+
+    return { accessToken, refreshToken };
+  };
 }

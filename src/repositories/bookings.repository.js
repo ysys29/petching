@@ -37,6 +37,7 @@ export class BookingsRepository {
       findBooking = {
         id: findBooking.id,
         userId: findBooking.userId,
+        petsitterId: findBooking.petsitterId,
         petsitterName: findBooking.petsitter.name,
         date: findBooking.date.toISOString().split('T')[0],
         animalType: findBooking.animalType,
@@ -44,6 +45,7 @@ export class BookingsRepository {
         location: findBooking.location,
         content: findBooking.content,
         totalPrice: findBooking.totalPrice,
+        status: findBooking.status,
         createdAt: findBooking.createdAt,
       };
     }
@@ -66,7 +68,7 @@ export class BookingsRepository {
       data: {
         userId,
         petsitterId,
-        date,
+        date: new Date(date),
         animalType,
         serviceType,
         location,
@@ -79,9 +81,9 @@ export class BookingsRepository {
   };
 
   //예약 목록 조회
-  findAllBookings = async ({ userId, sort }) => {
+  findAllBookings = async ({ whereType, sort }) => {
     let bookings = await this.prisma.booking.findMany({
-      where: { userId },
+      where: whereType,
       orderBy: { createdAt: sort },
       include: { petsitter: true },
     });
@@ -89,10 +91,12 @@ export class BookingsRepository {
     return bookings.map((booking) => {
       return {
         id: booking.id,
+        userId: booking.userId,
         petsitterName: booking.petsitter.name,
         animalType: booking.animalType,
         date: booking.date.toISOString().split('T')[0],
         totalPrice: booking.totalPrice,
+        status: booking.status,
       };
     });
   };
@@ -122,8 +126,13 @@ export class BookingsRepository {
     return updatedBooking;
   };
 
-  //예약 삭제
-  deleteBooking = async ({ bookingId }) => {
-    await this.prisma.booking.delete({ where: { id: bookingId } });
+  //예약 상태 수정
+  bookingStatusUpdate = async ({ bookingId, status }) => {
+    const statusUpdatedData = await this.prisma.booking.update({
+      where: { id: bookingId },
+      data: { status },
+    });
+
+    return statusUpdatedData;
   };
 }

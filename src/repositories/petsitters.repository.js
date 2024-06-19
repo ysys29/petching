@@ -41,4 +41,34 @@ export class PetsitterRepository {
     });
     return data;
   };
+
+  //펫시터 이메일로 찾기(로그인용)
+  findPetsitterByEmail = async ({ email }) => {
+    const petsitter = await prisma.petsitter.findUnique({
+      where: { email },
+    });
+
+    return petsitter;
+  };
+
+  findPetsitterById = async ({ id }) => {
+    const petsitter = await prisma.petsitter.findUnique({
+      where: { id },
+    });
+
+    return petsitter;
+  };
+
+  //펫시터 찾기
+  findPetsitterByIdWith = async ({ petsitterId }) => {
+    const petsitter = await prisma.petsitter.findUnique({
+      where: { id: petsitterId },
+      include: {
+        petsitterService: true,
+        petsitterLocation: true,
+      },
+    });
+
+    return petsitter;
+  };
 }
