@@ -1,8 +1,9 @@
-import { PetsitterService } from '../services/petsitters.service.js';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 export class PetsitterController {
-  petsitterService = new PetsitterService();
+  constructor(petsitterService) {
+    this.petsitterService = petsitterService;
+  }
 
   // 펫시터 목록 조회
   getList = async (req, res, next) => {
