@@ -156,7 +156,7 @@ model Review {
 model RefreshToken {
   id           Int    @id @default(autoincrement()) @map("id")
   userId       Int    @unique @map("user_id")
-  refreshToken String @map("refresh_token")
+  refreshToken String? @map("refresh_token")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

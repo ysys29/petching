@@ -10,7 +10,7 @@ export class UsersRepository {
     introduce,
     profileImage,
   }) => {
-    const data = await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
@@ -20,7 +20,16 @@ export class UsersRepository {
       },
     });
 
-    return data;
+    await this.prisma.refreshToken.create({
+      data: {
+        refreshToken: null,
+        user: {
+          connect: { id: user.id }
+        }
+      }
+    });
+
+    return user;
   };
 
   findOneEmail = async (email) => {
@@ -34,10 +43,18 @@ export class UsersRepository {
   findOneId = async (id) => {
     const data = await this.prisma.user.findUnique({
       where: { id },
-      // omit: { password: true },
     });
+    const result = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      introduce: data.introduce,
+      profileImage: data.profileImage,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt
+    }
 
-    return data;
+    return result;
   };
 
   findOneRefreshTokenId = async (id) => {
@@ -46,5 +63,27 @@ export class UsersRepository {
     });
 
     return data;
+  };
+
+  refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
+    if (hashedRefreshToken === 'nodata') {
+      await this.prisma.refreshToken.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          refreshToken: null,
+        },
+      });
+    } else {
+      await this.prisma.refreshToken.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          refreshToken: hashedRefreshToken,
+        },
+      });
+    }
   };
 }

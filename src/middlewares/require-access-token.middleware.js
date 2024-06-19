@@ -40,22 +40,20 @@ export const requireAccessToken = async (req, res, next) => {
 
     const { id } = payload;
     const { role } = payload;
-    console.log('--------페이로드------------');
-    console.log('페이로드', payload);
 
     const user =
       role === 'user'
         ? await usersRepository.findOneId(id)
         : await petsittersRepository.findPetsitterById({ id });
-    // const user = await usersRepository.findOneId(id);
-    console.log('--------유저정보------------');
-    console.log('유저 정보', user);
-
-    // console.log('--------펫시터 정보------------');
-    // console.log('펫시터 정보', user);
-
+        
     if (!user) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);
+    }
+
+    const { refreshToken } = await usersRepository.findOneRefreshTokenId(id);
+
+    if (refreshToken === null) {
+      throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_TOKEN);
     }
 
     req.user = { ...user, role };

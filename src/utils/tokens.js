@@ -12,7 +12,7 @@ export function createAccessToken({ id, role }) {
   });
 }
 //리프레시 토큰 발급 함수
-export function createRefreshToken(id, role) {
+export function createRefreshToken({ id, role }) {
   return jwt.sign({ id, role }, REFRESH_TOKEN_SECRET, {
     expiresIn: REFRESH_TOKEN_EXPIRES,
   });
