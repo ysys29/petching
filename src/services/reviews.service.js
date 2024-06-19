@@ -62,7 +62,7 @@ export class ReviewService{
         throw new Error('수정하실 리뷰를 작성해주세요.')
       }
 
-      const updatedReview = await reviewRepository.update({reviewId: +reviewId, userId, rating: +rating, comment})
+      const updatedReview = await reviewRepository.update({reviewId: +reviewId, userId, rating, comment})
       return updatedReview;
     };
 
