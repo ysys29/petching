@@ -1,6 +1,5 @@
 export class UsersRepository {
   constructor(prisma) {
-    console.log(prisma.user);
     this.prisma = prisma;
   }
 
