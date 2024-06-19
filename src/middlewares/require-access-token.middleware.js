@@ -45,15 +45,17 @@ export const requireAccessToken = async (req, res, next) => {
       role === 'user'
         ? await usersRepository.findOneId(id)
         : await petsittersRepository.findPetsitterById({ id });
-        
+
     if (!user) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);
     }
 
-    const { refreshToken } = await usersRepository.findOneRefreshTokenId(id);
+    if (role === 'user') {
+      const { refreshToken } = await usersRepository.findOneRefreshTokenId(id);
 
-    if (refreshToken === null) {
-      throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_TOKEN);
+      if (refreshToken === null) {
+        throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_TOKEN);
+      }
     }
 
     req.user = { ...user, role };
