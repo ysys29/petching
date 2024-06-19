@@ -5,9 +5,9 @@ import bcrypt from 'bcrypt';
 import { createAccessToken, createRefreshToken } from '../utils/tokens.js';
 
 export class AuthService {
-  constructor(usersRepository) {
+  constructor(usersRepository, petsitterRepository) {
     this.usersRepository = usersRepository;
-    this.tokensRepository = this.tokensRepository;
+    this.petsitterRepository = petsitterRepository;
   }
 
   // 회원가입
@@ -31,7 +31,7 @@ export class AuthService {
 
   // 펫시터 로그인
   signInPetsitter = async ({ email, password }) => {
-    const petsitter = await this.usersRepository.findPetsitterByEmail({
+    const petsitter = await this.petsitterRepository.findPetsitterByEmail({
       email,
     });
 
