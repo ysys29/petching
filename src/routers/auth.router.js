@@ -20,7 +20,18 @@ authRouter.post('/sign-up', signUpValidator, authController.signUp);
 // 로그인
 authRouter.post('/sign-in', signInValidator, authController.signIn);
 
+//펫시터 회원가입
+authRouter.post(
+  '/petsitters/sign-up',
+  signUpValidator,
+  authController.signUpPetsitter
+);
+
 //펫시터 로그인
-authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
+authRouter.post(
+  '/petsitters/sign-in',
+  signInValidator,
+  authController.signInPetsitter
+);
 
 export { authRouter };

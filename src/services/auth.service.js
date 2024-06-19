@@ -33,13 +33,45 @@ export class AuthService {
   signIn = async ({ email, password }) => {
     const user = await this.usersRepository.findOneEmail(email);
     const passwordRef = user && bcrypt.compareSync(password, user.password);
-    
+
     if (!passwordRef) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.SIGN_IN.UNAUTHORIZED);
     }
-    
+
     return user;
-  }
+  };
+
+  // 펫시터 회원가입
+  createPetsitter = async ({
+    email,
+    password,
+    name,
+    experience,
+    introduce,
+    profileImage,
+  }) => {
+    const existingPetsitter =
+      await this.petsitterRepository.findPetsitterByEmail({
+        email,
+      });
+
+    if (existingPetsitter) {
+      throw new HttpError.Conflict('이미 가입된 이메일입니다.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, HASH_SALT_ROUNDS);
+
+    const user = await this.petsitterRepository.createPetsitter({
+      email,
+      password: hashedPassword,
+      name,
+      experience,
+      introduce,
+      profileImage,
+    });
+
+    return user;
+  };
 
   // 펫시터 로그인
   signInPetsitter = async ({ email, password }) => {
