@@ -58,8 +58,9 @@ export class AuthService {
     return petsitter;
   };
 
-  signOut = async ({ id }) => {
-    await this.usersRepository.refreshTokenUpdate({ id });
+  // 로그아웃
+  signOut = async ({ id, hashedRefreshToken }) => {
+    await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
   }
 
   //액세스토큰, 리프레시 토큰 발급
