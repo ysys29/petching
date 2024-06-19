@@ -33,28 +33,51 @@ export class AuthController {
   signIn = async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      
+
       const user = await this.authService.signIn({
         email,
         password,
-      })
+      });
 
       const { accessToken, refreshToken } =
-      await this.authService.createAccessAndRefreshToken({
-        id: user.id,
-        role: 'user',
-      });
+        await this.authService.createAccessAndRefreshToken({
+          id: user.id,
+          role: 'user',
+        });
 
       return res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
         message: MESSAGES.AUTH.SIGN_IN.SUCCEED,
-        accessToken, refreshToken
+        accessToken,
+        refreshToken,
       });
     } catch (error) {
       next(error);
     }
+  };
 
-  }
+  //펫시터 회원가입
+  signUpPetsitter = async (req, res, next) => {
+    try {
+      const { email, password, name, experience, introduce, profileImage } =
+        req.body;
+
+      const data = await this.authService.createPetsitter({
+        email,
+        password,
+        name,
+        experience: experience ? Number(experience) : undefined,
+        introduce,
+        profileImage,
+      });
+
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({ message: '펫시터로 회원가입 했습니다.', data: data.id });
+    } catch (error) {
+      next(error);
+    }
+  };
 
   //펫시터 로그인
   signInPetsitter = async (req, res, next) => {
@@ -81,5 +104,3 @@ export class AuthController {
     }
   };
 }
-
-

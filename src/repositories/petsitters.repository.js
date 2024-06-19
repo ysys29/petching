@@ -61,6 +61,29 @@ export class PetsitterRepository {
     return petsitter;
   };
 
+  //펫시터 회원가입
+  createPetsitter = async ({
+    email,
+    password,
+    name,
+    experience,
+    introduce,
+    profileImage,
+  }) => {
+    const user = await this.prisma.petsitter.create({
+      data: {
+        email,
+        password,
+        name,
+        experience,
+        introduce,
+        profileImage,
+      },
+    });
+
+    return user;
+  };
+
   //펫시터 찾기
   findPetsitterByIdWith = async ({ petsitterId }) => {
     const petsitter = await this.prisma.petsitter.findUnique({
