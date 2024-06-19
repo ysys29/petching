@@ -33,28 +33,28 @@ export class AuthController {
   signIn = async (req, res, next) => {
     try {
       const { email, password } = req.body;
-      
+
       const user = await this.authService.signIn({
         email,
         password,
-      })
+      });
 
       const { accessToken, refreshToken } =
-      await this.authService.createAccessAndRefreshToken({
-        id: user.id,
-        role: 'user',
-      });
+        await this.authService.createAccessAndRefreshToken({
+          id: user.id,
+          role: 'user',
+        });
 
       return res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
         message: MESSAGES.AUTH.SIGN_IN.SUCCEED,
-        accessToken, refreshToken
+        accessToken,
+        refreshToken,
       });
     } catch (error) {
       next(error);
     }
-
-  }
+  };
 
   //펫시터 로그인
   signInPetsitter = async (req, res, next) => {
@@ -83,9 +83,17 @@ export class AuthController {
 
   signOut = async (req, res, next) => {
     try {
-      const user = req.user
+      const user = req.user;
+
+      await this.authService.signOut({ id: user.id });
+
+      return res.status(HTTP_STATUS.OK).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.AUTH.SIGN_OUT.SUCCEED,
+        data: { id: user.id }
+      })
+    } catch (error) {
+      next(error);
     }
-  }
+  };
 }
-
-
