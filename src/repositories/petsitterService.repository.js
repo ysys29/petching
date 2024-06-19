@@ -11,12 +11,13 @@ export class PetsitterServiceRepository {
     return existingService;
   };
 
-  createService = async ({ petsitterId, animalType, serviceType }) => {
+  createService = async ({ petsitterId, animalType, serviceType, price }) => {
     const createData = await this.prisma.petsitterService.create({
       data: {
         petsitterId,
         animalType,
         serviceType,
+        price,
       },
     });
 

@@ -84,7 +84,7 @@ export class PetsitterService {
     });
   };
 
-  serviceUpdate = async ({ petsitterId, animalType, serviceType }) => {
+  serviceUpdate = async ({ petsitterId, animalType, serviceType, price }) => {
     const existingService =
       await this.petsitterServiceRepository.findPetsitterService({
         petsitterId,
@@ -100,6 +100,7 @@ export class PetsitterService {
       petsitterId,
       animalType,
       serviceType,
+      price,
     });
 
     return createData;

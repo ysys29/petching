@@ -13,6 +13,12 @@ const schema = Joi.object({
       'any.only':
         '서비스 유형은 WALK, SHOWER, PICKUP, FEED 중 선택할 수 있습니다.',
     }),
+  price: Joi.number()
+    .required()
+    .messages({
+      'number.base': '가격은 숫자로 입력해 주세요.',
+      'any.required': '서비스 가격을 입력해 주세요.',
+    }),
 });
 
 export const updateServiceValidator = async (req, res, next) => {

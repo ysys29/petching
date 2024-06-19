@@ -58,7 +58,7 @@ model PetsitterService {
   petsitterId Int         @map("petsitter_id")
   animalType  AnimalType  @map("animal_type")
   serviceType ServiceType @map("service_type")
-  price       Int         @default(0) @map("price")
+  price       Int         @map("price")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -154,8 +154,8 @@ model Review {
 }
 
 model RefreshToken {
-  id           Int    @id @default(autoincrement()) @map("id")
-  userId       Int    @unique @map("user_id")
+  id           Int     @id @default(autoincrement()) @map("id")
+  userId       Int     @unique @map("user_id")
   refreshToken String? @map("refresh_token")
 
   createdAt DateTime @default(now()) @map("created_at")

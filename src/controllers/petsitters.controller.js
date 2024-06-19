@@ -76,12 +76,13 @@ export class PetsitterController {
   serviceUpdate = async (req, res, next) => {
     try {
       const petsitterId = req.user.id;
-      const { animalType, serviceType } = req.body;
+      const { animalType, serviceType, price } = req.body;
 
       const data = await this.petsitterService.serviceUpdate({
         petsitterId,
         animalType,
         serviceType,
+        price: Number(price),
       });
 
       res
