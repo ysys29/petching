@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 import { HttpError } from '../errors/http.error.js';
 import { UsersRepository } from '../repositories/users.repository.js';
 import { PetsitterRepository } from '../repositories/petsitters.repository.js';
+import { prisma } from '../utils/prisma.utils.js';
 
-const usersRepository = new UsersRepository();
+const usersRepository = new UsersRepository(prisma);
 const petsittersRepository = new PetsitterRepository();
 
 export const requireAccessToken = async (req, res, next) => {
@@ -39,12 +40,19 @@ export const requireAccessToken = async (req, res, next) => {
 
     const { id } = payload;
     const { role } = payload;
+    console.log('--------페이로드------------');
+    console.log('페이로드', payload);
 
     const user =
       role === 'user'
         ? await usersRepository.findOneId(id)
         : await petsittersRepository.findPetsitterById({ id });
     // const user = await usersRepository.findOneId(id);
+    console.log('--------유저정보------------');
+    console.log('유저 정보', user);
+
+    // console.log('--------펫시터 정보------------');
+    // console.log('펫시터 정보', user);
 
     if (!user) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.NO_USER);

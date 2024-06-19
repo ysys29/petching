@@ -15,10 +15,10 @@ const authService = new AuthService(usersRepository, petsitterRepository);
 const authController = new AuthController(authService);
 
 // 회원가입
-authRouter.post('/sign-up', signUpValidator, authController.signUp)
+authRouter.post('/sign-up', signUpValidator, authController.signUp);
 
 // 로그인
-authRouter.post('/sign-in', signInValidator, authController.signIn)
+authRouter.post('/sign-in', signInValidator, authController.signIn);
 
 //펫시터 로그인
 authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
