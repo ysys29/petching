@@ -93,15 +93,20 @@ export class AuthService {
   // 로그아웃
   signOut = async ({ id, hashedRefreshToken }) => {
     await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
-  }
+  };
 
   //액세스토큰, 리프레시 토큰 발급
   createAccessAndRefreshToken = async ({ id, role }) => {
     const accessToken = createAccessToken({ id, role });
     const refreshToken = createRefreshToken({ id, role });
 
-    const hashedRefreshToken = bcrypt.hashSync(refreshToken, HASH_SALT_ROUNDS);
-    await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+    if (role === 'user') {
+      const hashedRefreshToken = bcrypt.hashSync(
+        refreshToken,
+        HASH_SALT_ROUNDS
+      );
+      await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+    }
 
     return { accessToken, refreshToken };
   };
