@@ -107,7 +107,7 @@ export class ReviewRepository {
    };
 
     
-    delete=async({ reviewId} )=>{
+    delete= async({ reviewId} )=>{
       
       const deletedreview = await prisma.review.delete({
         where:{

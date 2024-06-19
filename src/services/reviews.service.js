@@ -63,13 +63,8 @@ export class ReviewService{
 
 
     delete = async ({ reviewId, userId }) => {
-    const review = await reviewRepository.findById(reviewId);
-    if(!review){
-      throw new Error('리뷰를 찾을 수 없습니다.')
-    }
-      if (review.userId !== userId){
-        throw new Error('해당 리뷰를 삭제할 권한이 없습니다.')
-      }
+   
+   
       const deletedreview = await reviewRepository.delete({ reviewId, userId})
       return deletedreview;
 };
