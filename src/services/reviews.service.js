@@ -1,6 +1,6 @@
 
 import { ReviewRepository } from "../repositories/reviews.repository.js";
-import { prisma } from "../utils/prisma.utils.js";
+
 
 const reviewRepository = new ReviewRepository();
 
@@ -46,13 +46,8 @@ export class ReviewService{
     };
 
     update = async({reviewId, userId, rating, comment}) => {
-      const review = await prisma.review.findFirst({
-        where: { id: +reviewId},
-      })
-      if(!review){
-        throw new Error('리뷰를 찾을 수 없습니다.');
-      }
-      
+    
+    
       
       if(!rating){
         throw new Error('수정하실 평점을 작성해주세요')
@@ -67,5 +62,10 @@ export class ReviewService{
     };
 
 
-    delete = async () => {};
+    delete = async ({ reviewId, userId }) => {
+   
+   
+      const deletedreview = await reviewRepository.delete({ reviewId, userId})
+      return deletedreview;
+};
 }

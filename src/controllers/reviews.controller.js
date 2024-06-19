@@ -1,4 +1,4 @@
-import { prisma } from "../utils/prisma.utils.js";
+
 import { ReviewService } from '../services/reviews.service.js';
 
 const reviewService = new ReviewService();
@@ -53,7 +53,7 @@ export class ReviewController{
             return res.status(400).json({ message: '리뷰 ID를 확인해주세요.' });
           }
     
-          const review = await reviewService.getReviewById(reviewId);
+          const review = await reviewService.readOne(reviewId);
           
           if (!review) {
             return res.status(404).json({ message: '해당 리뷰를 찾을 수 없습니다.' });
@@ -83,12 +83,13 @@ export class ReviewController{
           }
       
          
-          const updatedReview = await reviewService.updateReview(reviewId, rating, comment);
+          const updatedReview = await reviewService.update({ reviewId: +reviewId, userId, rating,comment });
           res.status(200).json(updatedReview);
         } catch (error) {
           next(error);
         }
     };
+
     delete = async (req, res, next) => {
         try {
           const { reviewId } = req.params; 
@@ -100,7 +101,7 @@ export class ReviewController{
           }
       
          
-          const deletedReview = await reviewService.deleteReview({reviewId,userId});
+          const deletedReview = await reviewService.delete({reviewId,userId});
           
           res.status(200).json(deletedReview);
         } catch (error) {
