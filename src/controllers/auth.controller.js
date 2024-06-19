@@ -80,6 +80,12 @@ export class AuthController {
       next(error);
     }
   };
+
+  signOut = async (req, res, next) => {
+    try {
+      const user = req.user
+    }
+  }
 }
 
 
