@@ -43,7 +43,7 @@ export class UsersRepository {
   findOneId = async (id) => {
     const data = await this.prisma.user.findUnique({
       where: { id },
-      omit: { password: true },
+      // omit: { password: true },
     });
 
     return data;

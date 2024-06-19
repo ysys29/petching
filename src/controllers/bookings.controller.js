@@ -17,7 +17,7 @@ export class BookingsController {
       //예약
       const data = await this.bookingsService.createBooking({
         userId,
-        petsitterId,
+        petsitterId: +petsitterId,
         date: new Date(date),
         animalType,
         serviceType,

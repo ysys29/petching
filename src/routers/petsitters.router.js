@@ -1,13 +1,14 @@
 import express from 'express';
+import { prisma } from '../utils/prisma.utils.js';
 import { PetsitterController } from '../controllers/petsitters.controller.js';
+import { PetsitterRepository } from '../repositories/petsitters.repository.js';
+import { PetsitterService } from '../services/petsitters.service.js';
 
 const petsitterRouter = express.Router();
-const petsitterController = new PetsitterController();
 
-// /petsitters (목록조회)
-// /petsitters/3 (상세 조회)
-// /petsitters/apple (상세 조회)
-//
+const petsitterRepository = new PetsitterRepository(prisma);
+const petsitterService = new PetsitterService(petsitterRepository);
+const petsitterController = new PetsitterController(petsitterService);
 
 // 펫시터 목록 조회
 petsitterRouter.get('/', petsitterController.getList);
