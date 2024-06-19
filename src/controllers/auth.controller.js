@@ -81,11 +81,12 @@ export class AuthController {
     }
   };
 
+  // 로그아웃
   signOut = async (req, res, next) => {
     try {
       const user = req.user;
 
-      await this.authService.signOut({ id: user.id });
+      await this.authService.signOut({ id: user.id, hashedRefreshToken: 'nodata' });
 
       return res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
