@@ -5,13 +5,12 @@ export class AuthController {
   constructor(authService) {
     this.authService = authService;
   }
-  
 
   // 회원가입
   signUp = async (req, res, next) => {
     try {
       const { email, password, name, introduce, profileImage } = req.body;
-      
+
       const data = await this.authService.signUp({
         email,
         password,
@@ -25,6 +24,31 @@ export class AuthController {
         message: MESSAGES.AUTH.SIGN_UP.SUCCEED,
         data,
       });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //펫시터 로그인
+  signInPetsitter = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+
+      const petsitter = await this.authService.signInPetsitter({
+        email,
+        password,
+      });
+
+      const { accessToken, refreshToken } =
+        await this.authService.createAccessAndRefreshToken({
+          id: petsitter.id,
+          role: 'petsitter',
+        });
+
+      res
+        .status(HTTP_STATUS.OK)
+        .json({ result: true, accessToken, refreshToken });
+      return;
     } catch (error) {
       next(error);
     }

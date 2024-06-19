@@ -12,7 +12,10 @@ const authService = new AuthService(usersRepository);
 const authController = new AuthController(authService);
 
 // 회원가입
-authRouter.post('/sign-up', signupValidator, authController.signUp)
+authRouter.post('/sign-up', signupValidator, authController.signUp);
+
+//펫시터 로그인
+authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
 
 authRouter.post('/sign-in', async(req, res, next) =>{
    try{ const { email, password } = req.body;
