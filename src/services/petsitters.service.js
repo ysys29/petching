@@ -1,6 +1,9 @@
+import { HttpError } from '../errors/http.error.js';
+
 export class PetsitterService {
-  constructor(petsitterRepository) {
+  constructor(petsitterRepository, petsitterServiceRepository) {
     this.petsitterRepository = petsitterRepository;
+    this.petsitterServiceRepository = petsitterServiceRepository;
   }
 
   // 펫시터 목록조회
@@ -79,5 +82,26 @@ export class PetsitterService {
         createdAt: sitter.createdAt,
       };
     });
+  };
+
+  serviceUpdate = async ({ petsitterId, animalType, serviceType }) => {
+    const existingService =
+      await this.petsitterServiceRepository.findPetsitterService({
+        petsitterId,
+        animalType,
+        serviceType,
+      });
+
+    if (existingService) {
+      throw new HttpError.BadRequest('이미 저장된 서비스 내용입니다.');
+    }
+
+    const createData = await this.petsitterServiceRepository.createService({
+      petsitterId,
+      animalType,
+      serviceType,
+    });
+
+    return createData;
   };
 }

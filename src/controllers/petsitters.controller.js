@@ -71,4 +71,25 @@ export class PetsitterController {
       next(err);
     }
   };
+
+  //펫시터 지원 서비스 추가
+  serviceUpdate = async (req, res, next) => {
+    try {
+      const petsitterId = req.user.id;
+      const { animalType, serviceType } = req.body;
+
+      const data = await this.petsitterService.serviceUpdate({
+        petsitterId,
+        animalType,
+        serviceType,
+      });
+
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({ message: '서비스를 추가했습니다.', data });
+      return;
+    } catch (error) {
+      next(error);
+    }
+  };
 }
