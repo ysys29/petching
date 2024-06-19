@@ -5,13 +5,13 @@ export class PetsitterRepository {
 
   // 펫시터 목록 조회
   findSitter = async () => {
-    const data = await prisma.petsitter.findMany();
+    const data = await this.prisma.petsitter.findMany();
     return data;
   };
 
   //펫시터 상세조회
   readSitter = async (id) => {
-    const data = await prisma.petsitter.findUnique({
+    const data = await this.prisma.petsitter.findUnique({
       where: { id: +id },
     });
     return data;
@@ -19,7 +19,7 @@ export class PetsitterRepository {
 
   //펫시터 검색
   searchSitters = async (query) => {
-    const data = await prisma.petsitter.findMany({
+    const data = await this.prisma.petsitter.findMany({
       where: {
         name: { contains: query },
       },
@@ -29,7 +29,7 @@ export class PetsitterRepository {
 
   // 펫시터 지역별 정렬
   findByLocation = async (location) => {
-    const data = await prisma.petsitter.findMany({
+    const data = await this.prisma.petsitter.findMany({
       where: {
         petsitterLocation: {
           some: {
@@ -46,7 +46,7 @@ export class PetsitterRepository {
 
   //펫시터 이메일로 찾기(로그인용)
   findPetsitterByEmail = async ({ email }) => {
-    const petsitter = await prisma.petsitter.findUnique({
+    const petsitter = await this.prisma.petsitter.findUnique({
       where: { email },
     });
 
@@ -54,7 +54,7 @@ export class PetsitterRepository {
   };
 
   findPetsitterById = async ({ id }) => {
-    const petsitter = await prisma.petsitter.findUnique({
+    const petsitter = await this.prisma.petsitter.findUnique({
       where: { id },
     });
 
@@ -63,7 +63,7 @@ export class PetsitterRepository {
 
   //펫시터 찾기
   findPetsitterByIdWith = async ({ petsitterId }) => {
-    const petsitter = await prisma.petsitter.findUnique({
+    const petsitter = await this.prisma.petsitter.findUnique({
       where: { id: petsitterId },
       include: {
         petsitterService: true,
