@@ -3,7 +3,7 @@ import express from 'express';
 import { ReviewController } from '../controllers/reviews.controller.js';
 import { ReviewService } from '../services/reviews.service.js';
 import { ReviewRepository } from '../repositories/reviews.repository.js';
-import tempMiddleware from '../middlewares/temp.middleware.js';
+// import tempMiddleware from '../middlewares/temp.middleware.js';
 
 const reviewRouter = express.Router();
 
@@ -11,25 +11,32 @@ const reivewsRepository = new ReviewRepository();
 const reviewsService = new ReviewService(reivewsRepository);
 const reviewsController = new ReviewController(reviewsService);
 
+reviewRouter.post('/:petsitterId', reviewsController.create);
 
+reviewRouter.get('/:petsitterId', reviewsController.readMany);
 
-reviewRouter.post('/:petsitterId',tempMiddleware, reviewsController.create);
+reviewRouter.get(
+  '/myreviews/:userId',
+  //   tempMiddleware,
+  reviewsController.myreadMany
+);
 
-reviewRouter.get('/:petsitterId', tempMiddleware, reviewsController.readMany);
+reviewRouter.get(
+  '/review/:reviewId',
+  //   tempMiddleware,
+  reviewsController.readOne
+);
 
-reviewRouter.get('/myreviews/:userId', tempMiddleware,reviewsController.myreadMany);
+reviewRouter.patch(
+  '/myreviews/:reviewId',
+  //   tempMiddleware,
+  reviewsController.update
+);
 
-reviewRouter.get('/review/:reviewId', tempMiddleware, reviewsController.readOne);
-
-reviewRouter.patch('/myreviews/:reviewId', tempMiddleware,reviewsController.update);
-
-reviewRouter.delete('/myreviews/:reviewId',  tempMiddleware, reviewsController.delete);
-
-
-
-
-
-
-
+reviewRouter.delete(
+  '/myreviews/:reviewId',
+  //   tempMiddleware,
+  reviewsController.delete
+);
 
 export { reviewRouter };
