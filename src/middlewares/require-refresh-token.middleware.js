@@ -4,8 +4,9 @@ import jwt from 'jsonwebtoken';
 import { HttpError } from '../errors/http.error.js';
 import { UsersRepository } from '../repositories/users.repository.js';
 import bcrypt from 'bcrypt';
+import { prisma } from '../utils/prisma.utils.js';
 
-const usersRepository = new UsersRepository();
+const usersRepository = new UsersRepository(prisma);
 
 export const requireRefreshToken = async (req, res, next) => {
   try {
@@ -35,7 +36,9 @@ export const requireRefreshToken = async (req, res, next) => {
         throw new HttpError.Unauthorized(MESSAGES.AUTH.JWT.INVALID);
       }
     }
+
     const { id } = payload;
+
     const existedRefreshToken = await usersRepository.findOneRefreshTokenId(id);
 
     if (!existedRefreshToken) {
