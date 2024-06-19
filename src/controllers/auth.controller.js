@@ -29,4 +29,25 @@ export class AuthController {
       next(error);
     }
   };
+
+  // 로그인
+  signIn = async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      
+      const data = await this.authService.signIn({
+        email,
+        password,
+      })
+
+      return res.status(HTTP_STATUS.OK).json({
+        status: HTTP_STATUS.OK,
+        message: MESSAGES.AUTH.SIGN_IN.SUCCEED,
+        data,
+      });
+    } catch (error) {
+      next(error);
+    }
+
+  }
 }

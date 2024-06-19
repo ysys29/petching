@@ -26,4 +26,18 @@ export class AuthService {
 
     return data;
   };
+
+  // 로그인
+  signIn = async ({ email, password }) => {
+    const user = await this.usersRepository.findOneEmail(email);
+    const passwordRef = user && bcrypt.compareSync(password, user.password);
+    
+    if (!passwordRef) {
+      throw new HttpError.Unauthorized(MESSAGES.AUTH.SIGN_IN.UNAUTHORIZED);
+    }
+
+    const payload = { id: user.id };
+    const data = await 
+    
+  }
 }
