@@ -17,20 +17,34 @@ export class ReviewService{
 
     readMany = async(petsitterId) => { 
        
+      if(!petsitterId){
+        throw new Error('펫시터를 찾을 수 없습니다.');
+    }
       const reviews = await reviewRepository.readMany(petsitterId)
 
     return reviews;
   }
 
-    myreadMany = async(userId) => {
-      
+    myreadMany = async(userId) =>
+    {
+      if(!userId){
+        throw new Error('사용자를 찾을 수 없습니다.');
+    }
       const reviews = await reviewRepository.myreadMany(userId)
     
       return reviews;
    
 };  
-    readOne = async () => {};
-    
+    readOne = async (reviewId) => {
+      if(!reviewId){
+        throw new Error('사용자를 찾을 수 없습니다.');
+    }
+        const review = await reviewRepository.readOne(reviewId)
+        
+        return review;
+      
+    };
+
     update = async() => {};
     delete = async () => {};
 }
