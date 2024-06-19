@@ -23,5 +23,4 @@ authRouter.post('/sign-in', signInValidator, authController.signIn)
 //펫시터 로그인
 authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
 
-
 export { authRouter };
