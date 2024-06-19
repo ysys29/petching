@@ -19,4 +19,14 @@ authRouter.post('/sign-up', signupValidator, authController.signUp);
 //펫시터 로그인
 authRouter.post('/sign-in/petsitter', authController.signInPetsitter);
 
+authRouter.post('/sign-in', async(req, res, next) =>{
+   try{ const { email, password } = req.body;
+    if(!email || !password){
+          return res.status(400).json({message: '이메일과 비밀번호를 입력해주세요.'})
+    }
+}catch(err){
+    next(err)
+}
+})
+
 export { authRouter };
