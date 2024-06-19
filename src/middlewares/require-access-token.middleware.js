@@ -7,7 +7,7 @@ import { PetsitterRepository } from '../repositories/petsitters.repository.js';
 import { prisma } from '../utils/prisma.utils.js';
 
 const usersRepository = new UsersRepository(prisma);
-const petsittersRepository = new PetsitterRepository();
+const petsittersRepository = new PetsitterRepository(prisma);
 
 export const requireAccessToken = async (req, res, next) => {
   try {

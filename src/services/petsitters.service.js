@@ -1,7 +1,7 @@
-import { PetsitterRepository } from '../repositories/petsitters.repository.js';
-
 export class PetsitterService {
-  petsitterRepository = new PetsitterRepository();
+  constructor(petsitterRepository) {
+    this.petsitterRepository = petsitterRepository;
+  }
 
   // 펫시터 목록조회
   findSitter = async () => {
