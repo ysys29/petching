@@ -37,10 +37,8 @@ export class AuthService {
     if (!passwordRef) {
       throw new HttpError.Unauthorized(MESSAGES.AUTH.SIGN_IN.UNAUTHORIZED);
     }
-
-    const payload = { id: user.id };
-    const data = await 
     
+    return user;
   }
 
   // 펫시터 로그인
