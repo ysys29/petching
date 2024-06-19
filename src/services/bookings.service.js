@@ -1,8 +1,9 @@
 import { HttpError } from '../errors/http.error.js';
 
 export class BookingsService {
-  constructor(bookingsRepository) {
+  constructor(bookingsRepository, petsitterRepository) {
     this.bookingsRepository = bookingsRepository;
+    this.petsitterRepository = petsitterRepository;
   }
 
   //펫시터 아이디로 예약 찾기
@@ -20,7 +21,7 @@ export class BookingsService {
   // 펫시터 찾기
   findPetsitterById = async ({ petsitterId }) => {
     //해당하는 펫시터가 있는지 찾기
-    const petsitter = await this.bookingsRepository.findPetsitterById({
+    const petsitter = await this.petsitterRepository.findPetsitterByIdWith({
       petsitterId,
     });
 
@@ -158,6 +159,7 @@ export class BookingsService {
       throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
     }
 
+    console.log(booking);
     return booking;
   };
 
@@ -184,7 +186,13 @@ export class BookingsService {
       location: location ?? booking.location,
     });
 
-    if (date !== booking.date) {
+    console.log('date', date);
+    console.log('booking.date', booking.date);
+    console.log(date === booking.date);
+    console.log(typeof date);
+    console.log(typeof booking.date);
+
+    if (date.toString() !== booking.date.toString()) {
       //해당하는 날짜에 예약이 있는지 확인
       const existingBooking = await this.findBookingByPetsitterId({
         petsitterId: booking.petsitterId,
@@ -214,12 +222,12 @@ export class BookingsService {
   };
 
   //상태 변경
-  bookingStatusUpdate = async ({ bookingId, petsitterId, status }) => {
+  bookingStatusUpdate = async ({ userId, bookingId, petsitterId, status }) => {
     const booking = await this.findBookingByBookingId({
       petsitterId,
       bookingId,
+      userId,
     });
-    console.log('2222222', booking);
 
     const updatedBooking = await this.bookingsRepository.bookingStatusUpdate({
       bookingId,
