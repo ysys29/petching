@@ -56,6 +56,30 @@ export class AuthController {
     }
   };
 
+
+  //펫시터 회원가입
+  signUpPetsitter = async (req, res, next) => {
+    try {
+      const { email, password, name, experience, introduce, profileImage } =
+        req.body;
+
+      const data = await this.authService.createPetsitter({
+        email,
+        password,
+        name,
+        experience: experience ? Number(experience) : undefined,
+        introduce,
+        profileImage,
+      });
+
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({ message: '펫시터로 회원가입 했습니다.', data: data.id });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   //펫시터 로그인
   signInPetsitter = async (req, res, next) => {
     try {

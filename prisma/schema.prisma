@@ -35,7 +35,7 @@ model User {
 model Petsitter {
   id           Int     @id @default(autoincrement()) @map("id")
   name         String  @map("name")
-  experience   Int     @map("experience")
+  experience   Int     @default(0) @map("experience")
   email        String  @unique @map("email")
   password     String  @map("password")
   profileImage String? @map("profile_image")
