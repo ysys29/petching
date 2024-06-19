@@ -6,6 +6,8 @@ import { BookingsRepository } from '../repositories/bookings.repository.js';
 import { PetsitterRepository } from '../repositories/petsitters.repository.js';
 import { requireRoles } from '../middlewares/require-roles.middleware.js';
 import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
+import { bookingsValidator } from '../middlewares/validators/bookings-validator.middleware.js';
+import { updateBookingValidator } from '../middlewares/validators/updateBooking-validator.middleware.js';
 
 import tempMiddleware from '../middlewares/temp.middleware.js';
 
@@ -22,6 +24,7 @@ const bookingsController = new BookingsController(bookingsService);
 //예약 생성
 bookingRouter.post(
   '/',
+  bookingsValidator,
   tempMiddleware,
   requireRoles(['user']),
   bookingsController.createBooking
@@ -40,6 +43,7 @@ bookingRouter.get(
 //예약 수정
 bookingRouter.patch(
   '/:bookingId',
+  updateBookingValidator,
   tempMiddleware,
   requireRoles(['user']),
   bookingsController.updateBooking
