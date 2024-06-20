@@ -14,20 +14,21 @@ export default class UsersService {
     return userInfo;
   };
 
-  updateUser = async (
+  updateUser = async ({
     userId,
     password,
     newPassword,
     newPasswordConfirm,
     name,
     introduce,
-    profileImage
-  ) => {
+    profileImage,
+  }) => {
     const existedUser =
       await this.usersRepository.getProfileWithPassword(userId);
     if (!existedUser) {
       throw new HttpError.NotFound('사용자를 찾을 수 없습니다.');
     }
+
     // 비밀번호 확인 및 해싱
     if (password) {
       const dbPasswordMatch = await bcrypt.compare(
@@ -50,7 +51,10 @@ export default class UsersService {
         );
       }
     }
-    const hashedPassword = await bcrypt.hash(newPassword, HASH_SALT_ROUNDS);
+
+    const hashedPassword = password
+      ? await bcrypt.hash(newPassword, HASH_SALT_ROUNDS)
+      : undefined;
 
     const updatedUser = await this.usersRepository.updateUser(
       userId,

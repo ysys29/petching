@@ -103,6 +103,7 @@ export class UsersRepository {
       data: { password: newPassword, name, introduce, profileImage },
     });
   };
+
   refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
     if (hashedRefreshToken === 'nodata') {
       await this.prisma.refreshToken.update({

@@ -9,14 +9,15 @@ export class AuthController {
   // 회원가입
   signUp = async (req, res, next) => {
     try {
-      const { email, password, name, introduce, profileImage } = req.body;
+      const { email, password, name, introduce } = req.body;
+      const imageUrl = req.file ? req.file.location : undefined;
 
       const data = await this.authService.signUp({
         email,
         password,
         name,
         introduce,
-        profileImage,
+        profileImage: imageUrl,
       });
 
       return res.status(HTTP_STATUS.CREATED).json({
