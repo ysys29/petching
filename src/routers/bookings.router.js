@@ -10,8 +10,6 @@ import { bookingsValidator } from '../middlewares/validators/bookings-validator.
 import { updateBookingValidator } from '../middlewares/validators/updateBooking-validator.middleware.js';
 import { updateBookingStatusValidator } from '../middlewares/validators/update-booking-status-validator.middleware.js';
 
-// import tempMiddleware from '../middlewares/temp.middleware.js';
-
 const bookingRouter = express.Router();
 
 const bookingsRepository = new BookingsRepository(prisma);

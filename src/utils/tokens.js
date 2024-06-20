@@ -10,14 +10,9 @@ import {
 
 //엑세스 토큰 발급 함수
 export function createAccessToken({ id, role }) {
-  try {
-    console.log(ACCESS_TOKEN_SECRET);
-    return jwt.sign({ id, role }, ACCESS_TOKEN_SECRET, {
-      expiresIn: ACCESS_TOKEN_EXPIRES,
-    });
-  } catch (error) {
-    console.log('에러메세지', error.message);
-  }
+  return jwt.sign({ id, role }, ACCESS_TOKEN_SECRET, {
+    expiresIn: ACCESS_TOKEN_EXPIRES,
+  });
 }
 //리프레시 토큰 발급 함수
 export function createRefreshToken({ id, role }) {

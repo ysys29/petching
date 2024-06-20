@@ -159,7 +159,6 @@ export class BookingsService {
       throw new HttpError.Forbidden('접근 권한이 없는 예약입니다.');
     }
 
-    console.log(booking);
     return booking;
   };
 
@@ -185,12 +184,6 @@ export class BookingsService {
       serviceType: serviceType ?? booking.serviceType,
       location: location ?? booking.location,
     });
-
-    console.log('date', date);
-    console.log('booking.date', booking.date);
-    console.log(date === booking.date);
-    console.log(typeof date);
-    console.log(typeof booking.date);
 
     if (date.toString() !== booking.date.toString()) {
       //해당하는 날짜에 예약이 있는지 확인

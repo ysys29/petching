@@ -56,7 +56,6 @@ export class AuthController {
     }
   };
 
-  
   //펫시터 회원가입
   signUpPetsitter = async (req, res, next) => {
     try {
@@ -131,8 +130,6 @@ export class AuthController {
       const user = req.user;
       const id = user.id;
       const role = user.role;
-
-      console.log(id, role)
 
       const { accessToken, refreshToken } =
         await this.authService.createAccessAndRefreshToken({

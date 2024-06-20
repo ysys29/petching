@@ -9,9 +9,7 @@ export class BookmarkRepository {
   };
 
   findUserById = async (id) => {
-    console.log(id);
     const temp = await prisma.user.findMany();
-    console.log(temp);
 
     const data = await prisma.user.findUnique({
       where: { id },
@@ -20,7 +18,6 @@ export class BookmarkRepository {
   };
 
   createBookmark = async (userId, petsitterId) => {
-    console.log(userId, petsitterId);
     const data = await prisma.bookmark.create({
       data: {
         userId,
