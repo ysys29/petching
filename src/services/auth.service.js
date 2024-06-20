@@ -41,6 +41,38 @@ export class AuthService {
     return user;
   };
 
+  // 펫시터 회원가입
+  createPetsitter = async ({
+    email,
+    password,
+    name,
+    experience,
+    introduce,
+    profileImage,
+  }) => {
+    const existingPetsitter =
+      await this.petsitterRepository.findPetsitterByEmail({
+        email,
+      });
+
+    if (existingPetsitter) {
+      throw new HttpError.Conflict('이미 가입된 이메일입니다.');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, HASH_SALT_ROUNDS);
+
+    const user = await this.petsitterRepository.createPetsitter({
+      email,
+      password: hashedPassword,
+      name,
+      experience,
+      introduce,
+      profileImage,
+    });
+
+    return user;
+  };
+
   // 펫시터 로그인
   signInPetsitter = async ({ email, password }) => {
     const petsitter = await this.petsitterRepository.findPetsitterByEmail({
@@ -58,10 +90,23 @@ export class AuthService {
     return petsitter;
   };
 
+  // 로그아웃
+  signOut = async ({ id, hashedRefreshToken }) => {
+    await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+  };
+
   //액세스토큰, 리프레시 토큰 발급
   createAccessAndRefreshToken = async ({ id, role }) => {
     const accessToken = createAccessToken({ id, role });
     const refreshToken = createRefreshToken({ id, role });
+
+    if (role === 'user') {
+      const hashedRefreshToken = bcrypt.hashSync(
+        refreshToken,
+        HASH_SALT_ROUNDS
+      );
+      await this.usersRepository.refreshTokenUpdate({ id, hashedRefreshToken });
+    }
 
     return { accessToken, refreshToken };
   };

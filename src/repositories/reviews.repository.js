@@ -65,13 +65,55 @@ export class ReviewRepository {
           });
           return reviews;
     };
-    readOne=async( )=>{
+    readOne=async(reviewId)=>{
+      const review = await prisma.review.findUnique({
+        where: {
+          id: +reviewId,
+        },
+        include:{
+          user:{select:{
+            id:true,
+            name: true,
+            profileImage: true,
+          }},
+          petsitter: {select:{
+              id:true,
+              name: true,
+              profileImage: true,
+            },
+          },
+        }
+      });
+      return review;
         
     };
-    update=async( )=>{
-        
-    };
-    delete=async( )=>{
-        
-    };
-}
+    update = async({reviewId, rating, comment })=>{
+      const review = await prisma.review.findFirst({
+        where: { id: +reviewId},
+      })
+      if(!review){
+        throw new Error('리뷰를 찾을 수 없습니다.');
+      }
+
+      const updatedReview = await prisma.review.update({
+        where:{ id: +reviewId},
+        data:{
+          rating: +rating,
+          comment: comment,
+        }
+      })
+      return updatedReview;
+     
+   };
+
+    
+    delete= async({ reviewId} )=>{
+      
+      const deletedreview = await prisma.review.delete({
+        where:{
+          id: +reviewId        
+    }
+  })
+   return deletedreview;
+  }
+  }

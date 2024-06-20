@@ -1,5 +1,4 @@
 import express from 'express';
-// import tempMiddleware from '../middlewares/temp.middleware.js';
 import UsersController from '../controllers/users.controllers.js';
 import UsersService from '../services/users.service.js';
 import { UsersRepository } from '../repositories/users.repository.js';
@@ -20,10 +19,9 @@ usersRouter.get(
 );
 usersRouter.patch(
   '/mypage',
-  upload.single('profileImage'),
   requireAccessToken,
+  upload,
   updatePrifileValidator,
-  upload.single('profileImage'),
   usersController.updateUsers.bind(usersController)
 );
 

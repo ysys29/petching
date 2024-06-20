@@ -1,7 +1,15 @@
-import { PetsitterRepository } from '../repositories/petsitters.repository.js';
+import { HttpError } from '../errors/http.error.js';
 
 export class PetsitterService {
-  petsitterRepository = new PetsitterRepository();
+  constructor(
+    petsitterRepository,
+    petsitterServiceRepository,
+    petsitterLocationRepository
+  ) {
+    this.petsitterRepository = petsitterRepository;
+    this.petsitterServiceRepository = petsitterServiceRepository;
+    this.petsitterLocationRepository = petsitterLocationRepository;
+  }
 
   // 펫시터 목록조회
   findSitter = async () => {
@@ -79,5 +87,47 @@ export class PetsitterService {
         createdAt: sitter.createdAt,
       };
     });
+  };
+
+  serviceCreate = async ({ petsitterId, animalType, serviceType, price }) => {
+    const existingService =
+      await this.petsitterServiceRepository.findPetsitterService({
+        petsitterId,
+        animalType,
+        serviceType,
+      });
+
+    if (existingService) {
+      throw new HttpError.BadRequest('이미 저장된 서비스 내용입니다.');
+    }
+
+    const createData = await this.petsitterServiceRepository.createService({
+      petsitterId,
+      animalType,
+      serviceType,
+      price,
+    });
+
+    return createData;
+  };
+
+  locationCreate = async ({ petsitterId, location, surcharge }) => {
+    const existingLocation =
+      await this.petsitterLocationRepository.findPetsitterLocation({
+        petsitterId,
+        location,
+      });
+
+    if (existingLocation) {
+      throw new HttpError.BadRequest('이미 저장된 서비스 지역입니다.');
+    }
+
+    const createData = await this.petsitterLocationRepository.createLocation({
+      petsitterId,
+      location,
+      surcharge,
+    });
+
+    return createData;
   };
 }

@@ -10,7 +10,7 @@ export class UsersRepository {
     introduce,
     profileImage,
   }) => {
-    const data = await this.prisma.user.create({
+    const user = await this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
@@ -20,7 +20,16 @@ export class UsersRepository {
       },
     });
 
-    return data;
+    await this.prisma.refreshToken.create({
+      data: {
+        refreshToken: null,
+        user: {
+          connect: { id: user.id },
+        },
+      },
+    });
+
+    return user;
   };
 
   findOneEmail = async (email) => {
@@ -32,13 +41,20 @@ export class UsersRepository {
   };
 
   findOneId = async (id) => {
-    console.log('--------findOneId에 id값이 들어오나--------', id);
-    console.log(this.prisma);
     const data = await this.prisma.user.findUnique({
       where: { id },
-      // omit: { password: true },
     });
-    return data;
+    const result = {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      introduce: data.introduce,
+      profileImage: data.profileImage,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt,
+    };
+
+    return result;
   };
 
   findOneRefreshTokenId = async (id) => {
@@ -48,13 +64,6 @@ export class UsersRepository {
     return data;
   };
 
-  findPetsitterByEmail = async ({ email }) => {
-    const petsitter = await this.prisma.petsitter.findUnique({
-      where: { email },
-    });
-
-    return petsitter;
-  };
   getPrifile = async (id) => {
     const data = await this.prisma.user.findUnique({
       where: { id },
@@ -84,5 +93,26 @@ export class UsersRepository {
         updatedAt: true,
       },
     });
+  };
+  refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
+    if (hashedRefreshToken === 'nodata') {
+      await this.prisma.refreshToken.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          refreshToken: null,
+        },
+      });
+    } else {
+      await this.prisma.refreshToken.update({
+        where: {
+          userId: id,
+        },
+        data: {
+          refreshToken: hashedRefreshToken,
+        },
+      });
+    }
   };
 }

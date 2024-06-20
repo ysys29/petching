@@ -1,8 +1,9 @@
-import { PetsitterService } from '../services/petsitters.service.js';
 import { HTTP_STATUS } from '../constants/http-status.constant.js';
 
 export class PetsitterController {
-  petsitterService = new PetsitterService();
+  constructor(petsitterService) {
+    this.petsitterService = petsitterService;
+  }
 
   // 펫시터 목록 조회
   getList = async (req, res, next) => {
@@ -68,6 +69,48 @@ export class PetsitterController {
       });
     } catch (err) {
       next(err);
+    }
+  };
+
+  //펫시터 지원 서비스 추가
+  serviceCreate = async (req, res, next) => {
+    try {
+      const petsitterId = req.user.id;
+      const { animalType, serviceType, price } = req.body;
+
+      const data = await this.petsitterService.serviceCreate({
+        petsitterId,
+        animalType,
+        serviceType,
+        price: Number(price),
+      });
+
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({ message: '서비스를 추가했습니다.', data });
+      return;
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  //펫시터 서비스 지역 추가
+  locationCreate = async (req, res, next) => {
+    try {
+      const petsitterId = req.user.id;
+      const { location, surcharge } = req.body;
+
+      const data = await this.petsitterService.locationCreate({
+        petsitterId,
+        location,
+        surcharge: surcharge ? Number(surcharge) : undefined,
+      });
+
+      res
+        .status(HTTP_STATUS.CREATED)
+        .json({ message: '서비스 지역을 추가했습니다.', data });
+    } catch (error) {
+      next(error);
     }
   };
 }

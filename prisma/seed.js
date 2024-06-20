@@ -33,29 +33,33 @@ async function main() {
   await prisma.petsitterService.create({
     data: {
       petsitterId: petsitter1.id,
-      animalType: 'dog',
-      serviceType: 'feed',
+      animalType: 'DOG',
+      serviceType: 'FEED',
+      price: 0,
     },
   });
   await prisma.petsitterService.create({
     data: {
       petsitterId: petsitter1.id,
-      animalType: 'etc',
-      serviceType: 'walk',
+      animalType: 'ETC',
+      serviceType: 'WALK',
+      price: 0,
     },
   });
   await prisma.petsitterService.create({
     data: {
       petsitterId: petsitter2.id,
-      animalType: 'etc',
-      serviceType: 'walk',
+      animalType: 'ETC',
+      serviceType: 'WALK',
+      price: 0,
     },
   });
   await prisma.petsitterService.create({
     data: {
       petsitterId: petsitter3.id,
-      animalType: 'cat',
-      serviceType: 'shower',
+      animalType: 'CAT',
+      serviceType: 'SHOWER',
+      price: 0,
     },
   });
 

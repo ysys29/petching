@@ -8,6 +8,7 @@ import { requireRoles } from '../middlewares/require-roles.middleware.js';
 import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
 import { bookingsValidator } from '../middlewares/validators/bookings-validator.middleware.js';
 import { updateBookingValidator } from '../middlewares/validators/updateBooking-validator.middleware.js';
+import { updateBookingStatusValidator } from '../middlewares/validators/update-booking-status-validator.middleware.js';
 
 // import tempMiddleware from '../middlewares/temp.middleware.js';
 
@@ -60,6 +61,7 @@ bookingRouter.delete(
 //예약 승인 or 거절 --펫시터가
 bookingRouter.patch(
   '/:bookingId/status',
+  updateBookingStatusValidator,
   requireAccessToken,
   requireRoles(['petsitter']),
   bookingsController.statusUpdate
