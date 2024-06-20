@@ -7,51 +7,62 @@ export default class UsersService {
   }
 
   getUserInfoByUserId = async (userId) => {
-    const userInfo = await this.usersRepository.getPrifile(userId);
+    const userInfo = await this.usersRepository.getProfile(userId);
     if (!userInfo) {
       throw new HttpError.NotFound('사용자를 찾을 수 없습니다.');
     }
     return userInfo;
   };
 
-  updateUser = async (userId, userData) => {
-    const existedUser = await this.usersRepository.getPrifile(userId);
+  updateUser = async (
+    userId,
+    password,
+    newPassword,
+    newPasswordConfirm,
+    name,
+    introduce,
+    profileImage
+  ) => {
+    const existedUser =
+      await this.usersRepository.getProfileWithPassword(userId);
     if (!existedUser) {
       throw new HttpError.NotFound('사용자를 찾을 수 없습니다.');
     }
     // 비밀번호 확인 및 해싱
-    if (
-      userData.password &&
-      userData.newPassword &&
-      userData.newPasswordConfirm
-    ) {
+    if (password) {
+      console.log(password);
+      console.log(existedUser.password);
+      console.log(password === existedUser.password);
       const dbPasswordMatch = await bcrypt.compare(
-        userData.password,
+        password,
         existedUser.password
       );
       if (!dbPasswordMatch) {
         throw new HttpError.BadRequest('현재 비밀번호가 일치하지 않습니다.');
       }
-
-      if (userData.newPassword !== userData.newPasswordConfirm) {
+      if (newPassword !== newPasswordConfirm) {
         throw new HttpError.BadRequest(
           '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.'
         );
       }
-
-      userData.password = await bcrypt.hash(
-        userData.newPassword,
-        HASH_SALT_ROUNDS
-      );
-    } else {
-      // 새 비밀번호가 제공되지 않으면 기존 비밀번호를 그대로 사용
-      delete userData.password;
     }
+    const hashedPassword = await bcrypt.hash(newPassword, HASH_SALT_ROUNDS);
 
-    const updatedUser = await this.usersRepository.updateUser(userId, userData);
-    if (!updatedUser) {
-      throw new HttpError.NotFound('사용자를 업데이트할 수 없습니다.');
-    }
-    return updatedUser;
+    const updatedUser = await this.usersRepository.updateUser(
+      userId,
+      hashedPassword,
+      name,
+      introduce,
+      profileImage
+    );
+    return {
+      id: updatedUser.id,
+      email: updatedUser.email,
+      name: updatedUser.name,
+      introduce: updatedUser.introduce,
+      profileImage: updatedUser.profileImage,
+      createdAt: updatedUser.createdAt,
+      updatedAt: updatedUser.updatedAt,
+    };
   };
 }

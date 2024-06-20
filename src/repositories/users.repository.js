@@ -64,7 +64,7 @@ export class UsersRepository {
     return data;
   };
 
-  getPrifile = async (id) => {
+  getProfile = async (id) => {
     const data = await this.prisma.user.findUnique({
       where: { id },
       select: {
@@ -79,19 +79,28 @@ export class UsersRepository {
     });
     return data;
   };
-  updateUser = async (userId, userData) => {
-    return await this.prisma.user.update({
+  // 비밀번호를 포함한 사용자 정보 가져오기
+  getProfileWithPassword = async (userId) => {
+    const userData = await this.prisma.user.findUnique({
       where: { id: userId },
-      data: { ...userData, updatedAt: new Date() },
       select: {
         id: true,
         email: true,
         name: true,
         introduce: true,
         profileImage: true,
+        password: true,
         createdAt: true,
         updatedAt: true,
       },
+    });
+    return userData;
+  };
+
+  updateUser = async (userId, newPassword, name, introduce, profileImage) => {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: newPassword, name, introduce, profileImage },
     });
   };
   refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {

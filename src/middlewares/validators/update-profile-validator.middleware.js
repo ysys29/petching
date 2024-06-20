@@ -50,7 +50,7 @@ const schema = Joi.object({
   profileImage: Joi.any().optional(), // profileImage는 form-data로 받을 것이므로 any로 설정
 });
 
-export const updatePrifileValidator = async (req, res, next) => {
+export const updateProfileValidator = async (req, res, next) => {
   try {
     await schema.validateAsync(req.body);
     next();
