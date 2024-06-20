@@ -30,9 +30,6 @@ export default class UsersService {
     }
     // 비밀번호 확인 및 해싱
     if (password) {
-      console.log(password);
-      console.log(existedUser.password);
-      console.log(password === existedUser.password);
       const dbPasswordMatch = await bcrypt.compare(
         password,
         existedUser.password
@@ -40,6 +37,13 @@ export default class UsersService {
       if (!dbPasswordMatch) {
         throw new HttpError.BadRequest('현재 비밀번호가 일치하지 않습니다.');
       }
+
+      if (password === newPassword) {
+        throw new HttpError.BadRequest(
+          '비밀번호와 새 비밀번호가 달라야 합니다.'
+        );
+      }
+
       if (newPassword !== newPasswordConfirm) {
         throw new HttpError.BadRequest(
           '새 비밀번호와 비밀번호 확인이 일치하지 않습니다.'

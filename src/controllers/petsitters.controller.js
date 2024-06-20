@@ -24,7 +24,6 @@ export class PetsitterController {
   sitterDetail = async (req, res, next) => {
     try {
       const { id } = req.params;
-      console.log(id);
 
       let data = await this.petsitterService.readSitter(id);
       return res.status(HTTP_STATUS.OK).json({
@@ -41,7 +40,6 @@ export class PetsitterController {
   lookForSitter = async (req, res, next) => {
     try {
       const { query } = req.query;
-      console.log('test');
 
       let data = await this.petsitterService.searchSitters(query);
 

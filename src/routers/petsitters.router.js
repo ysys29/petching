@@ -35,7 +35,7 @@ petsitterRouter.get('/:id', petsitterController.sitterDetail);
 
 // 펫시터 지원 서비스 추가
 petsitterRouter.post(
-  '/services ',
+  '/services',
   requireAccessToken,
   requireRoles(['petsitter']),
   updateServiceValidator,
