@@ -1,60 +1,84 @@
 
 import { ReviewRepository } from "../repositories/reviews.repository.js";
+import { HttpError } from '../errors/http.error.js';
 
 
 const reviewRepository = new ReviewRepository();
 
 export class ReviewService{
     create = async({petsitterId,userId, rating, comment}) => {  
-      
+
+      const petsitter = await reviewRepository.findUniquePetsitter(petsitterId)
+
+      if (!petsitter) {
+       throw new Error('펫시터를 찾을 수 없습니다.');
+     }
+
       if(!rating || !comment){
-        throw new Error('평점과 리뷰를 모두 입력해주세요.');
+        throw new HttpError.BadRequest('평점과 리뷰를 모두 입력해주세요.');
     }
        const review = await reviewRepository.create({ petsitterId, userId, rating, comment })
 
     return review;
     };
 
-    readMany = async(petsitterId) => { 
-       
-      if(!petsitterId){
-        throw new Error('펫시터를 찾을 수 없습니다.');
-    }
-      const reviews = await reviewRepository.readMany(petsitterId)
+    petsitterReadMany = async(petsitterId) => { 
+        
+   const petsitter = await reviewRepository.findUniquePetsitter(petsitterId)
+
+   if (!petsitter) {
+    throw new Error('펫시터를 찾을 수 없습니다.');
+  }
+      const reviews = await reviewRepository.petsitterReadMany(petsitterId)
 
     return reviews;
   }
 
-    myreadMany = async(userId) =>
+    myReadMany = async(userId) =>
     {
-      if(!userId){
-        throw new Error('사용자를 찾을 수 없습니다.');
+      const user = await reviewRepository.findUniqueUser(userId)
+
+
+      if(!user){
+        throw new HttpError.NotFound('사용자를 찾을 수 없습니다.');
     }
-      const reviews = await reviewRepository.myreadMany(userId)
+      const reviews = await reviewRepository.myReadMany(userId)
     
       return reviews;
    
 };  
     readOne = async (reviewId) => {
-      if(!reviewId){
-        throw new Error('사용자를 찾을 수 없습니다.');
-    }
-        const review = await reviewRepository.readOne(reviewId)
         
+  
+      const review= await reviewRepository.readOne(reviewId)
+      
+      if(!review){
+        throw new HttpError.NotFound('리뷰를 찾을 수 없습니다.');
+    }
+
+
         return review;
       
     };
 
     update = async({reviewId, userId, rating, comment}) => {
-    
-    
       
+      const review = await reviewRepository.findUnique(+reviewId)
+      
+      if(!review){
+        throw new Error('리뷰를 찾을 수 없습니다.');
+      }
+
       if(!rating){
-        throw new Error('수정하실 평점을 작성해주세요')
+        throw new HttpError.BadRequest('수정하실 평점을 작성해주세요')
       }
 
       if(!comment){
-        throw new Error('수정하실 리뷰를 작성해주세요.')
+        throw new HttpError.BadRequest('수정하실 리뷰를 작성해주세요.')
+      }
+
+      if (review.userId !== userId) {
+        throw new HttpError.Forbidden('해당 리뷰를 수정할 권한이 없습니다.');
       }
 
       const updatedReview = await reviewRepository.update({reviewId: +reviewId, userId, rating, comment})
@@ -62,10 +86,20 @@ export class ReviewService{
     };
 
 
-    delete = async ({ reviewId, userId }) => {
+    delete = async ({reviewId, userId}) => {
+       
+      const review = await reviewRepository.findUnique(+reviewId);
+
+
+      if(!review){
+        throw new HttpError.NotFound('리뷰를 찾을 수 없습니다.');
+    }
+
+    if (review.userId !== userId) {
+      throw new HttpError.Forbidden('해당 리뷰를 삭제할 권한이 없습니다.');
+    }
    
-   
-      const deletedreview = await reviewRepository.delete({ reviewId, userId})
+      const deletedreview = await reviewRepository.delete(+reviewId)
       return deletedreview;
 };
 }

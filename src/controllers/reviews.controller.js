@@ -1,5 +1,7 @@
 
 import { ReviewService } from '../services/reviews.service.js';
+import { HTTP_STATUS } from '../constants/http-status.constant.js';
+
 
 const reviewService = new ReviewService();
 
@@ -15,31 +17,31 @@ export class ReviewController{
       
           const review = await reviewService.create({ petsitterId, rating, comment, userId})
       
-          return res.status(201).json({ message: '리뷰가 등록되었습니다.', data: review });
+          return res.status(HTTP_STATUS.CREATED).json({ message: '리뷰가 등록되었습니다.', data: review });
         } catch (err) {
           next(err);
         }
       };
       
-    readMany =  async (req, res, next) => {
+    petsitterReadMany =  async (req, res, next) => {
      
       try {
         const { petsitterId } = req.params;
 
-        const reviews = await reviewService.readMany(petsitterId)
+        const reviews = await reviewService.petsitterReadMany(petsitterId)
     
-        res.status(200).json(reviews);
+        res.status(HTTP_STATUS.OK).json(reviews);
         } catch (err) {
             next(err);
         }
     };
 
-    myreadMany = async (req, res, next) => {
+    myReadMany = async (req, res, next) => {
         const { userId } = req.params;
           try {
            
-            const reviews = await reviewService.myreadMany(userId);
-            return res.status(200).json(reviews);
+            const reviews = await reviewService.myReadMany(userId);
+            return res.status(HTTP_STATUS.OK).json(reviews);
         } catch (err) {
             next(err);
         }
@@ -48,16 +50,11 @@ export class ReviewController{
     readOne = async (req, res, next) => {
         try {
           const { reviewId } = req.params;
-    
-          if (!reviewId) {
-            return res.status(400).json({ message: '리뷰 ID를 확인해주세요.' });
-          }
+  
     
           const review = await reviewService.readOne(reviewId);
           
-          if (!review) {
-            return res.status(404).json({ message: '해당 리뷰를 찾을 수 없습니다.' });
-          }
+         
           res.status(200).json(review);
         } catch (err) {
           next(err);
@@ -67,20 +64,9 @@ export class ReviewController{
     update =  async (req, res, next) => {
         try {
             const { reviewId } = req.params;
-            const { userId } = req.user;
+            const userId  = req.user.id;
             const { rating, comment } = req.body;
          
-          if (!reviewId) {
-            return res.status(400).json({ message: '리뷰를 찾을 수 없습니다.' });
-          }
-    
-          if(!rating){
-            return res.status(400).json({ message: '수정하실 평점을 작성해주세요'})
-          }
-    
-          if(!comment){
-            return res.status(400).json({ message: '수정하실 리뷰를 작성해주세요.'})
-          }
       
          
           const updatedReview = await reviewService.update({ reviewId: +reviewId, userId, rating,comment });
@@ -93,15 +79,11 @@ export class ReviewController{
     delete = async (req, res, next) => {
         try {
           const { reviewId } = req.params; 
-          const { userId } = req.user;
-      
-        
-          if (!reviewId) {
-            return res.status(400).json({ message: '리뷰를 찾을 수 없습니다.' });
-          }
-      
+          const userId  = req.user.id;
+          console.log(req.user)
+    
          
-          const deletedReview = await reviewService.delete({reviewId,userId});
+          const deletedReview = await reviewService.delete({reviewId: +reviewId, userId});
           
           res.status(200).json(deletedReview);
         } catch (error) {

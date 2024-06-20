@@ -1,16 +1,17 @@
 import { prisma } from "../utils/prisma.utils.js";
 
 export class ReviewRepository {
-    create = async({ userId, petsitterId,rating,comment })=>{
-    
-      
-      const petsitter = await prisma.petsitter.findUnique({
-            where: {id: +petsitterId },
-          });
 
-          if (!petsitter) {
-            throw new Error('펫시터를 찾을 수 없습니다.');
-          }
+  findUniquePetsitter = async(petsitterId) => {
+    const petsitter = await prisma.petsitter.findUnique({
+      where: { id: +petsitterId},
+    
+    })
+    return petsitter;
+  }
+
+  
+    create = async({ userId, petsitterId,rating,comment })=>{
       
           const review = await prisma.review.create({
             data: {
@@ -23,7 +24,8 @@ export class ReviewRepository {
           return review;
     };
 
-    readMany = async(petsitterId)=>{
+
+    petsitterReadMany = async(petsitterId)=>{
         const reviews = await prisma.review.findMany({
             where: {
               petsitterId: +petsitterId,
@@ -44,7 +46,17 @@ export class ReviewRepository {
     return reviews;
 };
 
-    myreadMany=async(userId )=>{
+
+findUniqueUser = async(userId) => {
+  const user = await prisma.user.findUnique({
+    where: { id: +userId},
+  
+  })
+  return user;
+}
+
+
+    myReadMany=async(userId)=>{
         const reviews = await prisma.review.findMany({
             where: {
               userId: +userId,
@@ -66,7 +78,7 @@ export class ReviewRepository {
           return reviews;
     };
     readOne=async(reviewId)=>{
-      const review = await prisma.review.findUnique({
+      const review = await prisma.review.findFirst({
         where: {
           id: +reviewId,
         },
@@ -88,13 +100,7 @@ export class ReviewRepository {
         
     };
     update = async({reviewId, rating, comment })=>{
-      const review = await prisma.review.findFirst({
-        where: { id: +reviewId},
-      })
-      if(!review){
-        throw new Error('리뷰를 찾을 수 없습니다.');
-      }
-
+   
       const updatedReview = await prisma.review.update({
         where:{ id: +reviewId},
         data:{
@@ -107,12 +113,19 @@ export class ReviewRepository {
    };
 
     
-    delete= async({ reviewId} )=>{
-      
-      const deletedreview = await prisma.review.delete({
-        where:{
-          id: +reviewId        
+    findUnique = async(reviewId) => {
+      const review = await prisma.review.findUnique({
+        where: { id: +reviewId},
+      })
+      return review;
     }
+
+    
+    delete= async(reviewId)=>{
+       
+    
+      const deletedreview = await prisma.review.delete({
+        where:{ id: +reviewId   }
   })
    return deletedreview;
   }
