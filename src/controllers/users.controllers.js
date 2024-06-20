@@ -22,30 +22,21 @@ export default class UsersController {
   updateUsers = async (req, res, next) => {
     try {
       const userId = req.user.id;
-      const {
-        password,
-        newPassword,
-        newPasswordConfirm,
-        name,
-        introduce,
-        profileImage,
-      } = req.body;
+      const { password, newPassword, newPasswordConfirm, name, introduce } =
+        req.body;
+      const imageUrl = req.file ? req.file.location : undefined;
 
       // 사용자 정보 업데이트 서비스 호출
-      const updatedUser = await this.usersService.updateUser(
+      const updatedUser = await this.usersService.updateUser({
         userId,
         password,
         newPassword,
         newPasswordConfirm,
         name,
         introduce,
-        profileImage
-      );
+        profileImage: imageUrl,
+      });
 
-      // 프로필 이미지 처리
-      if (req.file) {
-        userData.profileImage = req.file.path;
-      }
       res.status(HTTP_STATUS.OK).json({
         status: HTTP_STATUS.OK,
         message: '사용자 정보를 성공적으로 업데이트했습니다.',

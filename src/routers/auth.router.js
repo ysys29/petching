@@ -7,6 +7,7 @@ import { AuthController } from '../controllers/auth.controller.js';
 import { signUpValidator } from '../middlewares/validators/sign-up-validator.middleware.js';
 import { signInValidator } from '../middlewares/validators/sign-in-validator.middleware.js';
 import { requireRefreshToken } from '../middlewares/require-refresh-token.middleware.js';
+import { profileUploadImage } from '../utils/multer.util.js';
 
 const authRouter = express.Router();
 
@@ -16,11 +17,15 @@ const authService = new AuthService(usersRepository, petsitterRepository);
 const authController = new AuthController(authService);
 
 // 회원가입
-authRouter.post('/sign-up', signUpValidator, authController.signUp);
+authRouter.post(
+  '/sign-up',
+  profileUploadImage.single('profileImage'),
+  signUpValidator,
+  authController.signUp
+);
 
 // 로그인
 authRouter.post('/sign-in', signInValidator, authController.signIn);
-
 
 //펫시터 회원가입
 authRouter.post(
@@ -36,11 +41,14 @@ authRouter.post(
   authController.signInPetsitter
 );
 
-
 // 로그아웃
 authRouter.post('/sign-out', requireRefreshToken, authController.signOut);
 
 // 토큰 재발급
-authRouter.post('/renew-tokens', requireRefreshToken, authController.renewTokens);
+authRouter.post(
+  '/renew-tokens',
+  requireRefreshToken,
+  authController.renewTokens
+);
 
 export { authRouter };
