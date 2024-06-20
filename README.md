@@ -44,9 +44,8 @@
 
 
 ## API 명세서
-![스크린샷 2024-06-20 122138](https://github.com/ysys29/petching/assets/167045109/9785874b-9a97-41c2-9c5c-c3bf8e399432)
-![스크린샷 2024-06-20 122213](https://github.com/ysys29/petching/assets/167045109/e7f22075-de97-4ec1-9f24-dfa4f813c2fd)
-![스크린샷 2024-06-20 122224](https://github.com/ysys29/petching/assets/167045109/f9bd9d35-c505-4dc0-a19e-69185180381c)
+![screencapture-teamsparta-notion-site-9eb371561bc54156a2f04cb366edac52-2024-06-20-19_14_24](https://github.com/ysys29/petching/assets/167045109/772e9d28-53d7-494e-818e-c64067780ea8)
+
 
 
 
