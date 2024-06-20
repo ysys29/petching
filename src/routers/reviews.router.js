@@ -15,9 +15,9 @@ const reviewsController = new ReviewController(reviewsService);
 
 reviewRouter.post('/:petsitterId', requireAccessToken, reviewsController.create);
 
-reviewRouter.get('/:petsitterId',  requireAccessToken, reviewsController.readMany);
+reviewRouter.get('/petsitter/:petsitterId',  requireAccessToken, reviewsController.petsitterReadMany);
 
-reviewRouter.get('/myreviews/:userId',  requireAccessToken,reviewsController.myreadMany);
+reviewRouter.get('/myreviews/:userId',  requireAccessToken,reviewsController.myReadMany);
 
 reviewRouter.get('/review/:reviewId',  requireAccessToken, reviewsController.readOne);
 
