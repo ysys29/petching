@@ -11,10 +11,9 @@ const schema = Joi.object({
       then: Joi.required(),
       otherwise: Joi.optional(),
     })
-
     .messages({
-      'any.required': '비밀번호를 입력해 주세요.',
-      'string.min': '비밀번호는 8글자이상을 입력해 주세요.',
+      'any.required': '새 비밀번호를 입력해 주세요.',
+      'string.min': `비밀번호는 ${MIN_PASSWORD_LENGTH}글자 이상 입력해 주세요.`,
       'string.pattern.base': '비밀번호에는 공백이 포함될 수 없습니다.',
     }),
   newPasswordConfirm: Joi.string()
@@ -26,7 +25,7 @@ const schema = Joi.object({
       otherwise: Joi.optional(),
     })
     .messages({
-      'any.required': '비밀번호 확인을 입력해 주세요.',
+      'any.required': '새 비밀번호 확인을 입력해 주세요.',
       'any.only': '두 비밀번호가 일치하지 않습니다.',
       'string.pattern.base': '비밀번호에는 공백이 포함될 수 없습니다.',
     }),
@@ -44,27 +43,18 @@ const schema = Joi.object({
         return helpers.message('소개는 500자 이하로 입력해 주세요.');
       }
       return value;
+    })
+    .messages({
+      'string.max': '소개는 500자 이하로 입력해 주세요.',
     }),
-  profileImage: Joi.object({
-    fieldname: Joi.string().required(),
-    originalname: Joi.string().required(),
-    encoding: Joi.string().required(),
-    mimetype: Joi.string()
-      .valid('image/jpeg', 'image/png', 'image/gif')
-      .required(),
-    size: Joi.number()
-      .max(5 * 1024 * 1024)
-      .required(), // 5MB 제한
-  })
-    .optional()
-    .unknown(true), // profileImage 객체에 정의되지 않은 다른 키들도 허용
+  profileImage: Joi.any().optional(), // profileImage는 form-data로 받을 것이므로 any로 설정
 });
 
-export const updatePrifileValidator = async (req, res, next) => {
+export const updateProfileValidator = async (req, res, next) => {
   try {
     await schema.validateAsync(req.body);
     next();
   } catch (error) {
-    next(error);
+    res.status(400).json({ status: 400, message: error.message });
   }
 };

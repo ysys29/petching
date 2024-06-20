@@ -24,9 +24,9 @@ export class UsersRepository {
       data: {
         refreshToken: null,
         user: {
-          connect: { id: user.id }
-        }
-      }
+          connect: { id: user.id },
+        },
+      },
     });
 
     return user;
@@ -51,8 +51,8 @@ export class UsersRepository {
       introduce: data.introduce,
       profileImage: data.profileImage,
       createdAt: data.createdAt,
-      updatedAt: data.updatedAt
-    }
+      updatedAt: data.updatedAt,
+    };
 
     return result;
   };
@@ -61,10 +61,48 @@ export class UsersRepository {
     const data = await this.prisma.refreshToken.findUnique({
       where: { userId: id },
     });
-
     return data;
   };
 
+  getProfile = async (id) => {
+    const data = await this.prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        introduce: true,
+        profileImage: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return data;
+  };
+  // 비밀번호를 포함한 사용자 정보 가져오기
+  getProfileWithPassword = async (userId) => {
+    const userData = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        introduce: true,
+        profileImage: true,
+        password: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return userData;
+  };
+
+  updateUser = async (userId, newPassword, name, introduce, profileImage) => {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: newPassword, name, introduce, profileImage },
+    });
+  };
   refreshTokenUpdate = async ({ id, hashedRefreshToken }) => {
     if (hashedRefreshToken === 'nodata') {
       await this.prisma.refreshToken.update({
