@@ -24,7 +24,6 @@ export default class UsersController {
       const userId = req.user.id;
       const { password, newPassword, newPasswordConfirm, name, introduce } =
         req.body;
-      const imageUrl = req.file ? req.file.location : undefined;
 
       // 사용자 정보 업데이트 서비스 호출
       const updatedUser = await this.usersService.updateUser({
@@ -34,7 +33,6 @@ export default class UsersController {
         newPasswordConfirm,
         name,
         introduce,
-        profileImage: imageUrl,
       });
 
       res.status(HTTP_STATUS.OK).json({

@@ -68,7 +68,6 @@ export class PetsitterRepository {
     name,
     experience,
     introduce,
-    profileImage,
   }) => {
     const user = await this.prisma.petsitter.create({
       data: {
@@ -77,7 +76,6 @@ export class PetsitterRepository {
         name,
         experience,
         introduce,
-        profileImage,
       },
     });
 
@@ -95,5 +93,17 @@ export class PetsitterRepository {
     });
 
     return petsitter;
+  };
+
+  //펫시터 이미지 업로드
+  uploadPetsitterProfileImage = async ({ userId, profileImage }) => {
+    const data = await this.prisma.petsitter.update({
+      where: { id: userId },
+      data: {
+        profileImage,
+      },
+    });
+
+    return data;
   };
 }

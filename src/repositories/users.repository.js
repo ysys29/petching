@@ -3,20 +3,13 @@ export class UsersRepository {
     this.prisma = prisma;
   }
 
-  createUsers = async ({
-    email,
-    hashedPassword,
-    name,
-    introduce,
-    profileImage,
-  }) => {
+  createUsers = async ({ email, hashedPassword, name, introduce }) => {
     const user = await this.prisma.user.create({
       data: {
         email,
         password: hashedPassword,
         name,
         introduce,
-        profileImage,
       },
     });
 
@@ -97,10 +90,10 @@ export class UsersRepository {
     return userData;
   };
 
-  updateUser = async (userId, newPassword, name, introduce, profileImage) => {
+  updateUser = async (userId, newPassword, name, introduce) => {
     return await this.prisma.user.update({
       where: { id: userId },
-      data: { password: newPassword, name, introduce, profileImage },
+      data: { password: newPassword, name, introduce },
     });
   };
 
@@ -124,5 +117,17 @@ export class UsersRepository {
         },
       });
     }
+  };
+
+  //이미지 업로드
+  uploadUserProfileImage = async ({ userId, profileImage }) => {
+    const data = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        profileImage,
+      },
+    });
+
+    return data;
   };
 }
