@@ -6,7 +6,6 @@ import { updateProfileValidator } from '../middlewares/validators/update-profile
 import { requireAccessToken } from '../middlewares/require-access-token.middleware.js';
 import { prisma } from '../utils/prisma.utils.js';
 import { requireRoles } from '../middlewares/require-roles.middleware.js';
-import { profileUploadImage } from '../utils/multer.util.js';
 
 const usersRouter = express.Router();
 const usersRepository = new UsersRepository(prisma);
@@ -24,7 +23,6 @@ usersRouter.patch(
   '/mypage',
   requireAccessToken,
   requireRoles(['user']),
-  profileUploadImage.single('profileImage'),
   updateProfileValidator,
   usersController.updateUsers
 );

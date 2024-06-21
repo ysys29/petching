@@ -31,9 +31,6 @@ const joiSchema = Joi.object({
   introduce: Joi.string().messages({
     'string.base': MESSAGES.AUTH.COMMON.INTRODUCE.NO_STRING,
   }),
-  profileImage: Joi.string().uri().messages({
-    'string.uri': MESSAGES.AUTH.COMMON.PROFILE_IMAGE.NO_STRING,
-  }),
   experience: Joi.number()
     .optional()
     .messages({ 'number.base': '경력은 숫자로 입력해주세요.' }),

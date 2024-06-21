@@ -21,7 +21,6 @@ export default class UsersService {
     newPasswordConfirm,
     name,
     introduce,
-    profileImage,
   }) => {
     const existedUser =
       await this.usersRepository.getProfileWithPassword(userId);
@@ -60,8 +59,7 @@ export default class UsersService {
       userId,
       hashedPassword,
       name,
-      introduce,
-      profileImage
+      introduce
     );
     return {
       id: updatedUser.id,

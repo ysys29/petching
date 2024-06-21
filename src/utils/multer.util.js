@@ -22,7 +22,7 @@ export const profileUploadImage = multer({
     bucket: AWS_S3_BUCKET_NAME,
     contentType: multerS3.AUTO_CONTENT_TYPE,
     key: (req, file, callback) => {
-      const fileName = `USER_${Date.now()}_${file.originalname}`;
+      const fileName = `${Date.now()}_${file.originalname}`;
       callback(null, `folder/${fileName}`);
     },
     acl: `public-read-write`,

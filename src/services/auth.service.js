@@ -11,7 +11,7 @@ export class AuthService {
   }
 
   // 회원가입
-  signUp = async ({ email, password, name, introduce, profileImage }) => {
+  signUp = async ({ email, password, name, introduce }) => {
     const findOneEmail = await this.usersRepository.findOneEmail(email);
 
     if (findOneEmail) {
@@ -23,7 +23,6 @@ export class AuthService {
       hashedPassword,
       name,
       introduce,
-      profileImage,
     });
 
     return data;
@@ -48,7 +47,6 @@ export class AuthService {
     name,
     experience,
     introduce,
-    profileImage,
   }) => {
     const existingPetsitter =
       await this.petsitterRepository.findPetsitterByEmail({
@@ -67,7 +65,6 @@ export class AuthService {
       name,
       experience,
       introduce,
-      profileImage,
     });
 
     return user;

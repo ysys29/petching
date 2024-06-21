@@ -47,7 +47,6 @@ const schema = Joi.object({
     .messages({
       'string.max': '소개는 500자 이하로 입력해 주세요.',
     }),
-  profileImage: Joi.any().optional(), // profileImage는 form-data로 받을 것이므로 any로 설정
 });
 
 export const updateProfileValidator = async (req, res, next) => {

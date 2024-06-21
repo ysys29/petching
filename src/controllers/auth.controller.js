@@ -10,14 +10,12 @@ export class AuthController {
   signUp = async (req, res, next) => {
     try {
       const { email, password, name, introduce } = req.body;
-      const imageUrl = req.file ? req.file.location : undefined;
 
       const data = await this.authService.signUp({
         email,
         password,
         name,
         introduce,
-        profileImage: imageUrl,
       });
 
       return res.status(HTTP_STATUS.CREATED).json({
@@ -60,8 +58,7 @@ export class AuthController {
   //펫시터 회원가입
   signUpPetsitter = async (req, res, next) => {
     try {
-      const { email, password, name, experience, introduce, profileImage } =
-        req.body;
+      const { email, password, name, experience, introduce } = req.body;
 
       const data = await this.authService.createPetsitter({
         email,
@@ -69,7 +66,6 @@ export class AuthController {
         name,
         experience: experience ? Number(experience) : undefined,
         introduce,
-        profileImage,
       });
 
       res
